@@ -1,0 +1,86 @@
+Blog App 
+    Client : Vuejs3 
+    API    : Django==4.0.4
+    DB     : SQLite3 
+
+    + users 
+        + id 
+        + username 
+        + email 
+        + password 
+        + fullname 
+        + gender 
+        + date_of_birth 
+    
+    + avatars 
+        + id 
+        + id_user
+        + path 
+
+    + articles
+        + id 
+        + id_user 
+        + title 
+        + content 
+        + created_at 
+        + updated-at
+
+    + cover_images 
+        + id 
+        + id_article
+        + path
+
+    + comments 
+        + id 
+        + id_user
+        + id_article 
+        + content 
+        + created_at 
+        + updated_at 
+
+Relationship
+    users 1-1 avatars
+    users 1-n articles
+    users 1-n comments
+
+    articles 1-1 cover_images
+    articles 1-n comments
+
+===========================================================
+
+Công cụ test API : 
+    + Post man 
+Công cụ quản lý DB SQLite3
+    + SQLite Studio 
+
+Authentication
+    + Role => user 
+
+    + Login 
+        + username or email 
+        + pw 
+            => jwt => token 
+    + Register 
+        + username 
+        + email (duy nhất)
+        + password 
+        + fullname 
+        + gender 
+        + date_of_birth 
+
+CRUD 
+    + users 
+        + Update infor 
+        + Change password 
+        + Forgot password (gửi mail)(làm sau)
+        + Upload avatar (update)
+
+    + articles
+        + ảnh bìa => upload ảnh bìa bài viết 
+        + get all bài viết => mỗi lần lấy ra 10 bài viết (paginate)
+        + get 1 bài viết 
+        + user CRUD bài viết 
+    + comments 
+        + user CRUD comment 
+
+    
