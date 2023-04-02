@@ -1,5 +1,6 @@
 from django.db import models
 
+<<<<<<< HEAD
 ## 
 from django.contrib.auth.models import AbstractUser
 
@@ -25,10 +26,23 @@ class User(AbstractUser):
     date_of_birth = models.CharField(max_length=30, blank=True, null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+=======
+# Create your models here.
+
+class User(models.Model):
+    id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=30, unique=True)
+    password = models.CharField(max_length=128)
+    email = models.EmailField(unique=True)
+    fullname = models.CharField(max_length=100)
+    gender = models.CharField(max_length=10)
+    date_of_birth = models.DateField()
+>>>>>>> c0eca83a2afc90e9ce247e3690163f5506aef4f3
 
     def __str__(self):
         return self.email
 
+<<<<<<< HEAD
 # class User(models.Model):
 #     id = models.AutoField(primary_key=True)
 #     username = models.CharField(max_length=30, unique=True)
@@ -41,6 +55,8 @@ class User(AbstractUser):
 #     def __str__(self):
 #         return self.email
 
+=======
+>>>>>>> c0eca83a2afc90e9ce247e3690163f5506aef4f3
 class Article(models.Model):
     id = models.AutoField(primary_key=True)
     id_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')

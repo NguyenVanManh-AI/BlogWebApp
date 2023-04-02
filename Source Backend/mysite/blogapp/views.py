@@ -2,11 +2,14 @@ from rest_framework import viewsets
 from .models import User, Article, Comments, Avatar, CoverImage
 from .serializers import UserSerializer, ArticleSerializer, CommentsSerializer, AvatarSerializer, CoverImageSerializer
 
+<<<<<<< HEAD
 ##
 from rest_framework.views import APIView, status
 from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password
 
+=======
+>>>>>>> c0eca83a2afc90e9ce247e3690163f5506aef4f3
 # Viewsets for User model
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -30,6 +33,7 @@ class AvatarViewSet(viewsets.ModelViewSet):
 # Viewsets for CoverImage model
 class CoverImageViewSet(viewsets.ModelViewSet):
     queryset = CoverImage.objects.all()
+<<<<<<< HEAD
     serializer_class = CoverImageSerializer
 
 
@@ -49,3 +53,6 @@ class UserRegisterView(APIView):
                 'error_message': 'Error!',
                 'errors_code': 400,
             }, status=status.HTTP_400_BAD_REQUEST)
+=======
+    serializer_class = CoverImageSerializer
+>>>>>>> c0eca83a2afc90e9ce247e3690163f5506aef4f3

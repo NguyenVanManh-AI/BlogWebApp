@@ -131,8 +131,12 @@ REST_FRAMEWORK = {
 }
 
 STATIC_URL = '/static/'
+<<<<<<< HEAD
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
 ##
 AUTH_USER_MODEL = 'blogapp.User'
+=======
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+>>>>>>> c0eca83a2afc90e9ce247e3690163f5506aef4f3
