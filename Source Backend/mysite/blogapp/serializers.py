@@ -34,13 +34,6 @@ class CoverImageSerializer(serializers.HyperlinkedModelSerializer):
         model = CoverImage
         fields = ['url', 'id', 'id_article', 'path']
 
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'fullname']
-
-
 class SearchUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
