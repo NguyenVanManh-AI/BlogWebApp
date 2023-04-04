@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from .models import User, Article, Comments, Avatar, CoverImage
-from .serializers import UserSerializer, ArticleSerializer, CommentsSerializer, AvatarSerializer, CoverImageSerializer
+from .serializers import UserSerializer, ArticleSerializer, CommentsSerializer, AvatarSerializer, CoverImageSerializer, SearchUserSerializer, SearchArticleSerializer
 
 ##
 from rest_framework.views import APIView, status
@@ -49,3 +49,15 @@ class UserRegisterView(APIView):
                 'error_message': 'Error!',
                 'errors_code': 400,
             }, status=status.HTTP_400_BAD_REQUEST)
+
+from rest_framework.response import Response
+
+class SearchView(APIView):
+    def get(self, request):
+        text_search = request.GET.get('text_search', '').strip()
+        users = User.objects.filter(fullname__icontains=text_search)[:10]
+        articles = Article.objects.filter(title__icontains=text_search)[:10-len(users)]
+        user_serializer = SearchUserSerializer(users, many=True)
+        article_serializer = SearchArticleSerializer(articles, many=True)
+        data = user_serializer.data + article_serializer.data
+        return Response({'data': data})

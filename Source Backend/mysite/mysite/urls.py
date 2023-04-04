@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from blogapp.views import UserRegisterView
+from blogapp.views import UserRegisterView, SearchView
 from rest_framework_simplejwt import views as jwt_views
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -50,4 +50,5 @@ urlpatterns = [
     path('', include('blogapp.urls')),
     path('api/register/', UserRegisterView.as_view(), name='register'),
     path('api/login/', CustomTokenObtainPairView.as_view(), name='login'),
+    path('search/', SearchView.as_view(), name='search'),
 ]
