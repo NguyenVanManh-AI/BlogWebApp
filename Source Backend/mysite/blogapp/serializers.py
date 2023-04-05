@@ -37,7 +37,6 @@ class CoverImageSerializer(serializers.ModelSerializer ):
         model = CoverImage
         fields = ['url', 'id', 'id_article', 'path']
 
-
 class SearchUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

@@ -1,5 +1,5 @@
 const axios = require('axios');
-import config from '../config.js'
+import config from '../../../config.js'
 
 export default {
 	post(url,data){
