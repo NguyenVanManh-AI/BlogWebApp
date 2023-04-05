@@ -169,7 +169,7 @@ export default {
         console.log(this.user);
         const { emitEvent } = useEventBus();
         emitEvent('eventSuccess','Register Success !');
-        
+
         // if(this.user.email == 'vanmanh@gmail.com' && this.user.password == 'vanmanh123'){
         //   const { emitEvent } = useEventBus();
         //   emitEvent('eventSuccess','Login Success !');

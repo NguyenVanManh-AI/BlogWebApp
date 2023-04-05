@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div id="dashboard_right">
+        scsac
     </div>
 </template>
 <script>
@@ -24,6 +25,8 @@ export default {
     },
 }
 </script>
-<style>
-
+<style scoped>
+#dashboard_right {
+    background-color: green;
+}
 </style>

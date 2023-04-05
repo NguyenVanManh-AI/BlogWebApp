@@ -33,7 +33,11 @@ export default {
   width: 13px;
   
 }
-
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 /* Track */
 ::-webkit-scrollbar-track { 
   background: white;  /*màu nền của ô cuộn */

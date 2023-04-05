@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div id="dashboard_user">
+        sdvdv
     </div>
 </template>
 <script>
@@ -24,6 +25,8 @@ export default {
     },
 }
 </script>
-<style>
-
+<style scoped>
+#dashboard_user {
+    background-color: blue;
+}
 </style>

@@ -90,10 +90,14 @@ CRUD
     + output : chỉ lấy 10 hàng đầu tiên (nếu ít hơn thì lấy ít hơn)
         + nếu là user thì mỗi hàng phải có 
             + lấy ra id 
+            + link ảnh đại diện 
             + lấy ra full name 
+            + type='user'
         + nếu là article thì mỗi hàng phải có 
             + lấy ra id 
             + lấy ra title 
+            + link ảnh bìa 
+            + type='article'
 
     + cách làm :
         + full join hay left join ,... gì thì tùy => rồi lấy ra 10 hàng đầu tiên thoả mãn   
@@ -110,7 +114,22 @@ ví dụ :
     + text_search = Nguyễn
     + output : 
         data : {
-            {id:1,Nguyễn Văn Mạnh},    <- user
-            {id:2,Nguyễn Công Cường},  <- user
-            {id:99,Bài viết về lãnh tụ Nguyễn Tất Thành}  <- article 
+            {
+                id:1,
+                fullname:Nguyễn Văn Mạnh,
+                path: "/avatar/7dwDJLkCl1Bx0MQOXNFD--RJVUNZPJNM-4k.jpg", <- link ảnh đại diện nếu có 
+                type:'user'
+            },  
+            {
+                id:2,
+                fullname:Nguyễn Công Cường,
+                image_path: null,
+                type:'user'
+            },  
+            {
+                id:99,
+                title:'Bài viết về lãnh tụ Nguyễn Tất Thành'
+                path: "/article/7dwDJLkCl1Bx0MQOXNFD--RJVUNZPJNM-4k.jpg", <- link ảnh bìa (chắc chắn có vì khi thêm bài viết phải thêm ảnh bìa),
+                type:'article'
+            } 
         }
