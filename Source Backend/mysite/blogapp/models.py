@@ -1,11 +1,9 @@
 from django.db import models
-
 ## 
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-##
 class User(AbstractUser):
     # Delete not use field
     first_name = None
@@ -17,13 +15,14 @@ class User(AbstractUser):
     id = models.AutoField(primary_key=True)
     # username = models.CharField(max_length=30)
     email = models.EmailField(max_length=100, unique=True)
-    username = models.CharField(max_length=30, blank=True, null=True)
+    username = models.CharField(max_length=30, unique=True)
     password = models.CharField(max_length=100)
     
     fullname = models.CharField(max_length=100, blank=True, null=True)
-    gender = models.CharField(max_length=10, blank=True, null=True)
-    date_of_birth = models.CharField(max_length=30, blank=True, null=True)
-    USERNAME_FIELD = 'email'
+    gender = models.BooleanField(blank=True, null=True)
+    # date_of_birth = models.CharField(max_length=30, blank=True, null=True)
+    date_of_birth = models.DateField(blank=True, null=True)
+    USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
     def __str__(self):
