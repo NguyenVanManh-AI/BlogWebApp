@@ -84,3 +84,33 @@ CRUD
         + user CRUD comment 
 
     
++ Tìm kiếm ở trang dashboard (đăng nhập hoặc chưa đăng nhập đều được => không cần middleware)
+    + Cho phép tìm kiếm bằng tên user (full name) và tên bài viết (title) (không tìm trong nội dung vì nó dài => mất thời gian)
+    + input : text_search 
+    + output : chỉ lấy 10 hàng đầu tiên (nếu ít hơn thì lấy ít hơn)
+        + nếu là user thì mỗi hàng phải có 
+            + lấy ra id 
+            + lấy ra full name 
+        + nếu là article thì mỗi hàng phải có 
+            + lấy ra id 
+            + lấy ra title 
+
+    + cách làm :
+        + full join hay left join ,... gì thì tùy => rồi lấy ra 10 hàng đầu tiên thoả mãn   
+        + cách làm dễ hơn 
+            đầu tiên search bảng user 
+                => nếu quá 10 hàng rồi thì
+            nếu chưa đủ 10 hàng thì search tiếp vào bảng article 
+            lấy ra 10-n hàng còn lại 
+
+    + tất nhiên là search theo kiểu : like %text% 
+         
+ví dụ : 
+
+    + text_search = Nguyễn
+    + output : 
+        data : {
+            {id:1,Nguyễn Văn Mạnh},    <- user
+            {id:2,Nguyễn Công Cường},  <- user
+            {id:99,Bài viết về lãnh tụ Nguyễn Tất Thành}  <- article 
+        }
