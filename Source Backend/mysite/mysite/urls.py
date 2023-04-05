@@ -12,6 +12,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
+import json
+
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -23,7 +25,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         token['fullname'] = user.fullname
         token['gender'] = user.gender
-        token['date_of_birth'] = user.date_of_birth
+        token['date_of_birth'] = json.dumps(user.date_of_birth, indent = 4, sort_keys = True, default = str)
+        
         return token
 
     def validate(self, attrs):
