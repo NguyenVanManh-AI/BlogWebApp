@@ -11,6 +11,6 @@ router.register(r'coverimages', CoverImageViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('users/<pk>/update-info/', UserUpdateAPIView.as_view()),
-    path('users/<int:pk>/changepassword/', UserPasswordUpdateAPIView.as_view(), name='user-change-password'),
+    path('users/<pk>/update-info', UserUpdateAPIView.as_view()),
+    path('users/<int:pk>/changepassword', UserPasswordUpdateAPIView.as_view(), name='user-change-password'),
 ]
