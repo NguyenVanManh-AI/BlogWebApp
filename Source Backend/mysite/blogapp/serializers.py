@@ -37,7 +37,7 @@ class SearchArticleSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'password', 'fullname', 'gender' , 'date_of_birth']
+        fields = ['id', 'email', 'password', 'fullname', 'gender' , 'date_of_birth']
         #extra_kwargs = {'password': {'write_only': True}}
 
 class AvatarUpdateSerializer(serializers.ModelSerializer ):
@@ -50,7 +50,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'fullname', 'gender', 'date_of_birth', 'avatar']
+        fields = ['id', 'email', 'fullname', 'gender', 'date_of_birth', 'avatar']
         
 
 class UserPasswordUpdateSerializer(serializers.ModelSerializer):
