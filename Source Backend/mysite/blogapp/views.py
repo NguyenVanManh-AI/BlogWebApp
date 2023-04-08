@@ -63,12 +63,13 @@ class SearchView(APIView):
         return Response({'data': data})
 
 from rest_framework import generics, permissions
-from .serializers import UserUpdateSerializer
+from .serializers import UserUpdateSerializer, UserPasswordUpdateSerializer
 
 class UserUpdateAPIView(generics.UpdateAPIView):
-    queryset = User.objects.all()
     serializer_class = UserUpdateSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return User.objects.get(pk=self.kwargs['pk'])
 
     def patch(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -76,3 +77,17 @@ class UserUpdateAPIView(generics.UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class UserPasswordUpdateAPIView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserPasswordUpdateSerializer
+    #permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        password = make_password(request.data.get('password'))
+        instance.password = password
+        instance.save(update_fields=['password'])
+        serializer = self.get_serializer(instance)
+        return Response({'message': 'Password Changed'}, status=status.HTTP_200_OK)

@@ -74,7 +74,7 @@ class Comments(models.Model):
 class Avatar(models.Model):
     id = models.AutoField(primary_key=True)
     id_user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='avatar')
-    path = models.ImageField(upload_to='static/avatars/')
+    path = models.ImageField(upload_to='static/avatars/', null=True)
 
     def __str__(self):
         return str(self.id)
