@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from .models import User, Article, Comments, Avatar, CoverImage
-from .serializers import UserSerializer, ArticleSerializer, CommentsSerializer, AvatarSerializer, CoverImageSerializer, SearchUserSerializer, SearchArticleSerializer
+from .serializers import UserPasswordUpdateSerializer, UserSerializer, ArticleSerializer, CommentsSerializer, AvatarSerializer, CoverImageSerializer, SearchUserSerializer, SearchArticleSerializer
 
 ##
 from rest_framework.views import APIView, status
@@ -46,7 +46,7 @@ class UserRegisterView(APIView):
 
         else:
             return JsonResponse({
-                'error_message': 'Error!',
+                'error_message': 'error',
                 'errors_code': 400,
             }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -63,13 +63,12 @@ class SearchView(APIView):
         return Response({'data': data})
 
 from rest_framework import generics, permissions
-from .serializers import UserUpdateSerializer, UserPasswordUpdateSerializer
+from .serializers import UserUpdateSerializer
 
 class UserUpdateAPIView(generics.UpdateAPIView):
+    queryset = User.objects.all()
     serializer_class = UserUpdateSerializer
-
-    def get_object(self):
-        return User.objects.get(pk=self.kwargs['pk'])
+    #permission_classes = [permissions.IsAuthenticated]
 
     def patch(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -77,8 +76,7 @@ class UserUpdateAPIView(generics.UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
-
+    
 class UserPasswordUpdateAPIView(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserPasswordUpdateSerializer
