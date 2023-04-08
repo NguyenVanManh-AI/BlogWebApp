@@ -21,7 +21,7 @@ export default {
 	get(url){
 		return new Promise( (resolve, reject) =>{ 
 			axios.get(
-				config.API_URL + '/' + url  , 
+				config.API_URL + url  , 
 				{
 					headers : this._getHeaders()
 				}
@@ -56,7 +56,7 @@ export default {
 	post(url,data){
 		return new Promise( (resolve, reject) =>{
 			axios.post(
-				config.API_URL + '/' + url, 
+				config.API_URL + url, 
 				data,
 				{
 					headers : this._getHeaders()
@@ -81,7 +81,7 @@ export default {
 	put(url,data){
 		return new Promise( (resolve, reject) =>{
 			axios.put(
-				config.API_URL + '/' + url, 
+				config.API_URL + url, 
 				data,
 				{
 					headers : this._getHeaders()
@@ -106,7 +106,7 @@ export default {
 	patch(url,data){
 		return new Promise( (resolve, reject) =>{
 			axios.patch(
-				config.API_URL + '/' + url, 
+				config.API_URL + url, 
 				data,
 				{
 					headers : this._getHeaders()
@@ -131,7 +131,7 @@ export default {
 	delete(url){
 		return new Promise( (resolve, reject) =>{
 			axios.delete(
-				config.API_URL + '/' + url, 
+				config.API_URL + url, 
 				{
 					headers : this._getHeaders()
 				}

@@ -3,13 +3,18 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import UserLogin from './../components/account/UserLogin'
 import UserRegister from './../components/account/UserRegister'
+import UserProfile from './../components/account/UserProfile'
+import UserchangePassword from './../components/account/UserchangePassword'
+import UserMain from './../components/account/UserMain' 
 
-import ArticleMain from './../components/article/ArticleMain'
-import ArticleAll from './../components/article/ArticleAll'
-import ArticleDetail from './../components/article/ArticleDetail'
-import ArticleEdit from './../components/article/ArticleEdit'
-import ArticleNew from './../components/article/ArticleNew'
-import UserArticle from './../components/article/UserArticle'
+import ArticleAll from './../components/account/article/ArticleAll'
+import ArticleDetail from './../components/account/article/ArticleDetail'
+import ArticleEdit from './../components/account/article/ArticleEdit'
+import ArticleNew from './../components/account/article/ArticleNew'
+
+// other
+import HelpSupport from './../components/account/other/HelpSupport'
+import UserComments from './../components/account/other/UserComments'
 
 import DashboardMain from './../components/dashboard/DashboardMain'
 // import DashboardLeft from './../components/dashboard/DashboardLeft'
@@ -24,15 +29,18 @@ const routes = [
     {path: '/register',component: UserRegister,name:'UserRegister'} ,
 
     {
-        path:'/article',
-        name:'ArticleMain',
-        component:ArticleMain,
+        path:'/account',
+        name:'UserMain',
+        component:UserMain,
         children : [
+            {path:'profile',name:'UserProfile',component:UserProfile},
+            {path:'change-password',name:'UserchangePassword',component:UserchangePassword},
             {path:'all',name:'ArticleAll',component:ArticleAll},
-            {path:'my-article',name:'UserArticle',component:UserArticle},
+            {path:'add',name:'ArticleNew',component:ArticleNew},
             {path:'detail/:id',name:'ArticleDetail',component:ArticleDetail},
             {path:'edit/:id',name:'ArticleEdit',component:ArticleEdit},
-            {path:'add',name:'ArticleNew',component:ArticleNew},
+            {path:'help-support',name:'HelpSupport',component:HelpSupport},
+            {path:'comment',name:'UserComments',component:UserComments},
         ]
     },
     {path: '/dashboard',component: DashboardMain,name:'DashboardMain'}, 

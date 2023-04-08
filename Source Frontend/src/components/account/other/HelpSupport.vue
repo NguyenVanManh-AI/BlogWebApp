@@ -1,11 +1,11 @@
 <template>
     <div>
-        ArticleNew
+        HelpSupport
     </div>
 </template>
 <script>
 export default {
-    name : "ArticleNew",
+    name : "HelpSupport",
     components: {
   
     },

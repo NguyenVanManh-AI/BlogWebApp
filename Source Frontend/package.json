@@ -38,6 +38,7 @@
     "vue-axios": "^3.4.1",
     "vue-disable-autocomplete": "^0.0.4",
     "vue-html-to-paper": "^1.4.4",
+    "vue-jquery": "^1.0.6",
     "vue-router": "^4.1.3",
     "vue3-google-oauth2": "^1.0.6",
     "vue3-print-nb": "^0.1.4",

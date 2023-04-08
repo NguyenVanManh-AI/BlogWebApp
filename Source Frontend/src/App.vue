@@ -37,12 +37,15 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  list-style: none;
+}
+a {
+  text-decoration: none;
 }
 /* Track */
 ::-webkit-scrollbar-track { 
   background: white;  /*màu nền của ô cuộn */
 }
- 
 /* Handle */
 ::-webkit-scrollbar-thumb { /*thanh cuộn nằm trong ô cuộn*/
     background: #888;  

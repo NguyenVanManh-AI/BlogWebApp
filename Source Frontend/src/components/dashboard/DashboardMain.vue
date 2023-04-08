@@ -27,7 +27,9 @@ export default {
 
     },
     mounted(){
-
+        if (document.body.style.paddingLeft !== "0px") {
+            document.body.style.paddingLeft = "0px";
+        }
     },
     methods:{
         
