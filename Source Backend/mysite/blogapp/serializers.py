@@ -1,8 +1,11 @@
-from rest_framework import serializers
+from rest_framework import serializers, fields
 from .models import User, Article, Comments, Avatar, CoverImage
+
+
 
 ##
 class UserSerializer(serializers.ModelSerializer):
+    # date_of_birth = fields.DateField(input_formats=['%Y-%m-%dT%'])
 
     class Meta:
         model = User
@@ -14,22 +17,22 @@ class UserSerializer(serializers.ModelSerializer):
 #         model = User
 #         fields = ['url', 'id', 'username', 'password', 'email', 'fullname', 'gender', 'date_of_birth']
 
-class ArticleSerializer(serializers.HyperlinkedModelSerializer):
+class ArticleSerializer(serializers.HyperlinkedModelSerializer ):
     class Meta:
         model = Article
         fields = ['url', 'id', 'id_user', 'title', 'content', 'created_at', 'updated_at']
 
-class CommentsSerializer(serializers.HyperlinkedModelSerializer):
+class CommentsSerializer(serializers.HyperlinkedModelSerializer ):
     class Meta:
         model = Comments
         fields = ['url', 'id', 'id_user', 'id_article', 'content', 'created_at', 'updated_at']
 
-class AvatarSerializer(serializers.HyperlinkedModelSerializer):
+class AvatarSerializer(serializers.HyperlinkedModelSerializer ):
     class Meta:
         model = Avatar
         fields = ['url', 'id', 'id_user', 'path']
 
-class CoverImageSerializer(serializers.HyperlinkedModelSerializer):
+class CoverImageSerializer(serializers.ModelSerializer ):
     class Meta:
         model = CoverImage
         fields = ['url', 'id', 'id_article', 'path']
