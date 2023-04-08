@@ -4,29 +4,50 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
+# class User(AbstractUser):
+#     # Delete not use field
+#     first_name = None
+#     last_name = None
+#     username = None
+#     last_login = None
+#     is_staff = None
+#     is_superuser = None
+#     id = models.AutoField(primary_key=True)
+#     # username = models.CharField(max_length=30)
+#     email = models.EmailField(max_length=100, unique=True)
+#     username = models.CharField(max_length=30, unique=True)
+#     password = models.CharField(max_length=100)
+    
+#     fullname = models.CharField(max_length=100, blank=True, null=True)
+#     gender = models.BooleanField(blank=True, null=True)
+#     # date_of_birth = models.CharField(max_length=30, blank=True, null=True)
+#     date_of_birth = models.DateField(blank=True, null=True)
+#     USERNAME_FIELD = 'username'
+#     REQUIRED_FIELDS = []
+
+#     def __str__(self):
+#         return self.username
+
 class User(AbstractUser):
-    # Delete not use field
     first_name = None
     last_name = None
-    username = None
     last_login = None
     is_staff = None
     is_superuser = None
+
     id = models.AutoField(primary_key=True)
-    # username = models.CharField(max_length=30)
     email = models.EmailField(max_length=100, unique=True)
     username = models.CharField(max_length=30, unique=True)
     password = models.CharField(max_length=100)
     
     fullname = models.CharField(max_length=100, blank=True, null=True)
     gender = models.BooleanField(blank=True, null=True)
-    # date_of_birth = models.CharField(max_length=30, blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
     def __str__(self):
-        return self.email
+        return str(self.id)
 
 class Article(models.Model):
     id = models.AutoField(primary_key=True)
@@ -37,7 +58,7 @@ class Article(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.title
+        return str(self.id)
 
 class Comments(models.Model):
     id = models.AutoField(primary_key=True)
@@ -48,15 +69,15 @@ class Comments(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.content
+        return str(self.id)
 
 class Avatar(models.Model):
     id = models.AutoField(primary_key=True)
     id_user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='avatar')
-    path = models.ImageField(upload_to='static/avatars/')
+    path = models.ImageField(upload_to='static/avatars/', null=True)
 
     def __str__(self):
-        return f'Avatar of {self.user.username}'
+        return str(self.id)
     
 class CoverImage(models.Model):
     id = models.AutoField(primary_key=True)
@@ -64,16 +85,6 @@ class CoverImage(models.Model):
     path = models.ImageField(upload_to='static/cover_images/')
 
     def __str__(self):
-        return f'Cover image of {self.article.title}'
+        return str(self.id)
     
-# class User(models.Model):
-#     id = models.AutoField(primary_key=True)
-#     username = models.CharField(max_length=30, unique=True)
-#     password = models.CharField(max_length=128)
-#     email = models.EmailField(unique=True)
-#     fullname = models.CharField(max_length=100)
-#     gender = models.CharField(max_length=10)
-#     date_of_birth = models.DateField()
 
-#     def __str__(self):
-#         return self.email

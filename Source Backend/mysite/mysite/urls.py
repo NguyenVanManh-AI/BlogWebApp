@@ -49,9 +49,9 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
     path('', include('blogapp.urls')),
-    path('api/register/', UserRegisterView.as_view(), name='register'),
-    path('api/login/', CustomTokenObtainPairView.as_view(), name='login'),
-    path('search/', SearchView.as_view(), name='search'),
+    path('api/register', UserRegisterView.as_view(), name='register'),
+    path('api/login', CustomTokenObtainPairView.as_view(), name='login'),
+    path('search', SearchView.as_view(), name='search'),
 ]
