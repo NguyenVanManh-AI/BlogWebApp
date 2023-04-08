@@ -70,6 +70,10 @@ export default {
           this.$router.push({name:"DashboardMain"});
       }
 
+      if (document.body.style.paddingLeft !== "0px") {
+        document.body.style.paddingLeft = "0px";
+      }
+
       // let urlParams = new URLSearchParams(window.location.search);
       // if(urlParams.has('access_token')) {
       //   var access_token = urlParams.get('access_token');
@@ -146,8 +150,20 @@ export default {
       login:function(){
         console.log(this.user);
         if(this.user.email == 'vanmanh@gmail.com' && this.user.password == 'vanmanh123'){
+          var user = {
+            id:'99',
+            email:'vanmanh@gmail.com',
+            password:'vanmanh123',
+            date_of_birth:'2022-04-22',
+            gender:'1',
+            fullname:'Nguyễn Văn Mạnh',
+            url:null
+            // 'https://scontent.fsgn2-3.fna.fbcdn.net/v/t39.30808-6/314843943_164495319555719_8685199952316666904_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=e3f864&_nc_ohc=rD8_vhlIQ00AX-U5765&_nc_ht=scontent.fsgn2-3.fna&oh=00_AfAO3pggZ6DoAK08A9Udix3kNQO6gTmSknYsYh1lDvg2Gw&oe=6436DF09'
+          }
+          window.localStorage.setItem('user',JSON.stringify(user));
           const { emitEvent } = useEventBus();
           emitEvent('eventSuccess','Login Success !');
+          this.$router.push({name:"DashboardMain"});
         }
         else {
           const { emitEvent } = useEventBus();
