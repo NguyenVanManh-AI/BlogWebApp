@@ -2,7 +2,6 @@
 from rest_framework import serializers, fields
 from .models import User, Article, Comments, Avatar, CoverImage
 
-
 class ArticleSerializer(serializers.ModelSerializer ):
     class Meta:
         model = Article
@@ -38,20 +37,19 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'password', 'fullname', 'gender' , 'date_of_birth']
-        #extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {'password': {'write_only': True}}
 
-class AvatarUpdateSerializer(serializers.ModelSerializer ):
-    class Meta:
-        model = Avatar
-        fields = ['id', 'path']
+    
 
 class UserUpdateSerializer(serializers.ModelSerializer):
-    avatar = AvatarUpdateSerializer(required=False, allow_null=True)
+    avatar = AvatarSerializer(required=False, allow_null=True)
 
     class Meta:
         model = User
         fields = ['id', 'email', 'fullname', 'gender', 'date_of_birth', 'avatar']
+        extra_kwargs = {'password': {'write_only': True}}
         
+     
 
 class UserPasswordUpdateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
@@ -60,9 +58,7 @@ class UserPasswordUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = ('password',)
 
-    def validate_password(self, value):
-        # Add any validation rules for the password field here
-        # For example, to require a minimum length of 8 characters:
-        if len(value) < 8:
-            raise serializers.ValidationError('Password must be at least 8 characters long')
-        return value
+    # def validate_password(self, value):
+    #     if len(value) <= 6:
+    #         raise serializers.ValidationError('Password must be at least 6 characters long')
+    #     return value
