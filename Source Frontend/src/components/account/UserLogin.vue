@@ -12,16 +12,16 @@
       <br><br><br><br><br>
       <div id="big">
         <div class="container col-4">
-            <form  @submit.prevent="login()" >
-              <div class="col-4 mx-auto"><router-link :to="{ name: 'DashboardMain' }" style="text-decoration: none !important;"><h2 style="font-weight: bold;font-size: 20px;color: #0076e5;" class="text-center"><i class="fa-solid fa-seedling"></i> Blog App</h2></router-link></div>
+            <form  @submit.prevent="login()" class="p-3">
+              <div class="col-6 mx-auto"><router-link :to="{ name: 'DashboardMain' }" style="text-decoration: none !important;"><h2 style="font-weight: bold;font-size: 20px;color: #0076e5;" class="text-center"><i class="fa-solid fa-seedling"></i> Blog App</h2></router-link></div>
               <br>
               <div class="form-group row">
-                <label for="staticEmail" class="col-4 col-form-label"><i class="fa-solid fa-envelope-circle-check"></i> Email </label> 
-                <input required v-model="user.email" type="email" class="form-control col-8" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <label for="staticEmail" class="col-3 col-form-label pl-0 pr-0"><i class="fa-solid fa-envelope-circle-check"></i> Email </label> 
+                <input required v-model="user.email" type="email" class="form-control col-9" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
               </div>
               <div class="form-group row">
-                <label for="staticEmail" class="col-4 col-form-label"><i class="fa-solid fa-key"></i> Password  </label> 
-                <input required v-model="user.password" type="password" class="form-control col-8" id="exampleInputPassword1" placeholder="Password">
+                <label for="staticEmail" class="col-3 col-form-label pl-0 pr-0"><i class="fa-solid fa-key"></i> Password  </label> 
+                <input required v-model="user.password" type="password" class="form-control col-9" id="exampleInputPassword1" placeholder="Password">
               </div>
               <!-- <a class="under" style="text-decoration: none;color: #F84B2F;" href="#" data-toggle="modal" data-target="#exampleModalForgotPassword" >Forgot your password ? </a><br> -->
               <router-link :to="{ name: 'UserRegister' }"><a class="under float-right" style="text-decoration: none;color: #F84B2F;" href="#" data-toggle="modal" data-target="#exampleModalForgotPassword" ><i class="fa-solid fa-user-plus"></i> Register ? </a></router-link><br>
@@ -36,7 +36,7 @@
 
 <script>
 // import BaseRequest from '../../restful/user/core/BaseRequest';
-// import LoginRequest from '../../restful/user/requests/LoginRequest'
+import LoginRequest from '../../restful/user/requests/LoginRequest'
 import useEventBus from './../../composables/useEventBus'
 import Notification from './../Notification'
 
@@ -74,156 +74,40 @@ export default {
         document.body.style.paddingLeft = "0px";
       }
 
-      // let urlParams = new URLSearchParams(window.location.search);
-      // if(urlParams.has('access_token')) {
-      //   var access_token = urlParams.get('access_token');
-      //   var data = {};
-      //   this.axios.post(config.API_URL + '/api/customer/me',data,
-      //     {
-      //       headers : {
-      //         Authorization : 'Bearer ' + access_token
-      //       }
-      //     })
-      //     .then( response =>{
-      //       var user = {
-      //         id:null,
-      //         fullname:'',
-      //         username:'',
-      //         email: '',
-      //         phone: '',
-      //         google_id:null,
-      //         date_of_birth:null,
-      //         url_img:null,
-      //         gender:null,
-      //         address:'',
-      //         status:null,
-      //         access_token:'',
-      //         refreshToken:'',
-      //         created_at:null,
-      //         updated_at:null,
-      //         email_verified_at:null,
-      //       }
-
-      //       user = response.data;
-      //       user.access_token = access_token;
-
-      //       // Đăng nhập thường thì xử lí lại server rồi còn đăng nhập bằng này thì xử li ở client cũng được 
-      //       // Nó cũng đảm bảo chức năng bảo mật 
-            
-      //       // Tài khoản này đã từng đăng nhập bằng google sau đó bị admin block 
-      //       // => Đăng nhập bằng Google nhưng nếu có status == 0 thì không cho vào 
-      //       const { emitEvent } = useEventBus();
-      //       if(user.status == 0) {
-      //         emitEvent('eventUserError','Your account has been locked !');
-      //         setTimeout(()=>{
-      //           this.$router.push({name:'LoginUser'}); 
-      //           window.location=window.origin + window.pathname ;
-      //         }, 1000);
-      //       }
-
-      //       else {
-      //         window.localStorage.setItem('user',JSON.stringify(user));
-      //         emitEvent('eventUserSuccess','Login by Google Success !');
-      //         setTimeout(()=>{
-      //           this.$router.push({name:'DashboardUser'}); 
-      //           window.location=window.location.href;
-      //         }, 1000);
-      //       }
-
-
-            
-      //     })
-      //     .catch( () => {
-      //       const { emitEvent } = useEventBus();
-      //       emitEvent('eventUserError','Login by Google failed !');
-      //       this.$router.push({name:"LoginUser"});
-      //     })
-      // }
-
-      // window.document.title='MetaShop | Login';
-      // if(window.localStorage.getItem('user')){
-      //     this.$router.push({name:"DashboardUser"});
-      // }
-
     },
     methods: {
       login:function(){
-        console.log(this.user);
-        if(this.user.email == 'vanmanh@gmail.com' && this.user.password == 'vanmanh123'){
-          var user = {
-            id:'99',
-            email:'vanmanh@gmail.com',
-            password:'vanmanh123',
-            date_of_birth:'2022-04-22',
-            gender:'1',
-            fullname:'Nguyễn Văn Mạnh',
-            url:null
-            // 'https://scontent.fsgn2-3.fna.fbcdn.net/v/t39.30808-6/314843943_164495319555719_8685199952316666904_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=e3f864&_nc_ohc=rD8_vhlIQ00AX-U5765&_nc_ht=scontent.fsgn2-3.fna&oh=00_AfAO3pggZ6DoAK08A9Udix3kNQO6gTmSknYsYh1lDvg2Gw&oe=6436DF09'
-          }
-          window.localStorage.setItem('user',JSON.stringify(user));
+        var v = this.user;
+        LoginRequest.post('api/login',this.user)
+        .then( data => {
+          console.log(data);
+          this.setdata(data);
           const { emitEvent } = useEventBus();
           emitEvent('eventSuccess','Login Success !');
-          this.$router.push({name:"DashboardMain"});
-        }
-        else {
-          const { emitEvent } = useEventBus();
-          emitEvent('eventError','Login Failse !');
-        }
-          // window.localStorage.setItem('admin',JSON.stringify(this.admin));
-        // console.log(this.loginUser);
-        // var v = this.loginUser;
-        // LoginRequest.post('api/customer/login',this.loginUser)
-        // .then( data => {
-        //   // console.log("login success !");
-        //   // alert("Đăng nhập thành công !");
-        //   console.log(data);
-        //   this.setdata(data);
-        //   this.error = null ;
-
-        //   const { emitEvent } = useEventBus();
-        //   emitEvent('eventUserSuccess','Login Success !');
-
-        //   setTimeout(()=>{
-        //     // console.log(data);
-        //     this.$router.push({name:'DashboardUser'}); 
-        //     window.location=window.location.href;
-        //   }, 1000);
+          setTimeout(()=>{
+            this.$router.push({name:'UserProfile'}); 
+          }, 1000);
           
-        // })
-        // .catch( error => {
-        //   this.loginUser = v; // để nó không reset ô input đi . 
-        //   this.error = error;
-        //   console.log(error);
-
-        //   const { emitEvent } = useEventBus();
-        //   emitEvent('eventUserError',error.response.data.error);
-        //   // console.log(error.response.data.error);
-        //   // console.log("login false !");
-        // })
+        })
+        .catch( () => {
+          this.user = v; 
+          const { emitEvent } = useEventBus();
+          emitEvent('eventError','Login fail !');
+        })
       },
       setdata:function(data){
-        console.log(data);
         var user = {
-            id:null,
-            fullname:'',
-            username:'',
-            email: '',
-            phone: '',
-            google_id:null,
-            date_of_birth:null,
-            url_img:null,
-            gender:null,
-            address:'',
-            status:null,
-            access_token:'',
-            refreshToken:'',
-            created_at:null,
-            updated_at:null,
-            email_verified_at:null,
-          }
-          user = data.user;
-          user.access_token = data.message.original.access_token;
-          window.localStorage.setItem('user',JSON.stringify(user));
+          id:null,
+          email:null,
+          date_of_birth:null,
+          gender:null,
+          fullname:null,
+          url:null,
+          access_token:null,
+        }
+        user = data;
+        user.access_token = data.access;
+        window.localStorage.setItem('user',JSON.stringify(user));
       },
     },
     watch:{

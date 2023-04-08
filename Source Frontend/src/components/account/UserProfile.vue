@@ -10,7 +10,7 @@
                     <div class="col-9">
                         <div style="color:gray"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</div>
                         <div style="margin-top: 30px;margin-bottom: 20px;color:gray"><i class="fa-solid fa-user"></i> USER INFORMATION</div>
-                        <label><i class="fa-solid fa-user-check"></i> Full Name</label><input v-model="user.fullname" placeholder="Full Name" type="text" class="form-control" >
+                        <label><i class="fa-solid fa-user-check"></i> Full Name</label><input v-model="user.fullname" required placeholder="Full Name" type="text" class="form-control" >
                     </div>
                     <div class="col-3 mt-10" >
                         <div >
@@ -20,16 +20,16 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-6"><label><i class="fa-solid fa-cake-candles"></i> Date of birth</label><input v-model="user.date_of_birth" type="date" format="YYYY MM DD" class="form-control" ></div>
+                    <div class="col-6"><label><i class="fa-solid fa-cake-candles"></i> Date of birth</label><input required v-model="user.date_of_birth" type="date" format="YYYY MM DD" class="form-control" ></div>
                     <div class="col-6">
                         <label><i class="fa-solid fa-venus-mars"></i> Gender</label>
                         <div style="border:1px solid #ced4da;padding:4px;border-radius:0.25rem;display:flex;height: 38px;background-color: rgba(255, 255, 255, 0.605);">
                             <div class="form-check form-check-inline">
-                                <input v-model="user.gender" class="form-check-input" type="radio" name="inlineRadioOptions" id="male" value="1">
+                                <input required v-model="user.gender" class="form-check-input" type="radio" name="inlineRadioOptions" id="male" value="true">
                                 <label style="color: #0085FF;" class="form-check-label" for="inlineRadio1">Men</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input v-model="user.gender" class="form-check-input" type="radio" name="inlineRadioOptions" id="female" value="0">
+                                <input required v-model="user.gender" class="form-check-input" type="radio" name="inlineRadioOptions" id="female" value="false">
                                 <label style="color: #0085FF;" class="form-check-label" for="inlineRadio2">Women</label>
                             </div>
                         </div>
@@ -37,11 +37,11 @@
                 </div>
                 <div class="title-big" style="margin-top: 30px;margin-bottom: 20px;color:gray"><i class="fa-solid fa-mobile-screen-button"></i> CONTACT INFORMATION</div>
                 <div class="row">
-                    <div class="col-12"><label><i class="fa-solid fa-envelope"></i> Email</label><input v-model="user.email" placeholder="Email" type="email" class="form-control" ></div>
+                    <div class="col-12"><label><i class="fa-solid fa-envelope"></i> Email</label><input required v-model="user.email" placeholder="Email" type="email" class="form-control" ></div>
                 </div>
                 <div class="dt1">
                     <div>
-                        <button type="submit" class="mt-4 btn-pers" id="login_button" >Save</button>
+                        <button type="submit" class="mt-4 btn-pers" id="login_button" ><i class="fa-solid fa-floppy-disk"></i> Save</button>
                     </div>
                 </div>
             </form>
@@ -79,30 +79,12 @@ export default {
         return{
             user:{
                 id:null,
-                fullname:'',
-                username:'',
-                email: '',
-                phone: '',
-                google_id:null,
+                email:null,
                 date_of_birth:null,
-                url_img:null,
                 gender:null,
-                address:'',
-                status:null,
-                access_token:'',
-                refreshToken:'',
-                created_at:null,
-                updated_at:null,
-                email_verified_at:null,
-            },
-            err:{
-                fullname:[],
-                email:[],
-                username:[],
-                address:[],
-                date_of_birth:[],
-                gender:[],
-                phone:[]
+                fullname:null,
+                url:null,
+                access_token:null,
             },
             url_img:''
         }
@@ -123,18 +105,14 @@ export default {
     },
     methods:{
         saveInfor:function(){
-            var iuser = JSON.stringify(this.user);
             var idCustomer = this.user.id;
             BaseRequest.patch('api/customer/update-profile',this.user)
             .then( () =>{
-                window.localStorage.setItem('user',iuser);
-
-                // gửi sự kiện để upload file 
                 const { emitEvent } = useEventBus();
                 emitEvent('eventUserUpfile',idCustomer);
                 setTimeout(()=>{emitEvent('eventUserResetUpfile');}, 2000);
 
-                emitEvent('eventUserSuccess','Edit Information Success !');
+                emitEvent('eventSuccess','Edit Information Success !');
 
                 window.localStorage.setItem('user',JSON.stringify(this.user));
 
@@ -145,38 +123,25 @@ export default {
                 }, 1500);
 
             }) 
-            .catch(error=>{
-                console.log(error);
-                this.err = error.response.data;
-                var error2 = this.err;
-
-                if(error2.fullname) this.inError(error2.fullname);
-                if(error2.email) this.inError(error2.email);
-                if(error2.username) this.inError(error2.username);
-                if(error2.address) this.inError(error2.address);
-                if(error2.date_of_birth) this.inError(error2.date_of_birth);
-                if(error2.gender) this.inError(error2.gender);
-                if(error2.phone) this.inError(error2.phone);
-                // this.err = error.reponse.status;
+            .catch(()=>{
+                const { emitEvent } = useEventBus();
+                emitEvent('eventSuccess','Edit Information Fail !');
             })
-        },
-        inError:function(er){
-            const { emitEvent } = useEventBus();
-            for(var i=0;i<er.length;i++) emitEvent('eventUserError',er[i]);
         },
     }
 }
 </script>
 
 <style scoped>
-* {
+/* * {
     transition: all 1s ease;
-}
+} */
 #profile{
     position: relative;
     background-color: #F2F4F6;
     padding: 0px 100px;
-    padding-bottom: 30px;
+    padding-bottom: 20px;
+    padding-top: 20px;
     /* height: 800px; */
     min-width: 100%;
 }

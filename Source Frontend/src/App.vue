@@ -29,10 +29,16 @@ export default {
 * {
   font-family: 'Exo', sans-serif;
 } */
-::-webkit-scrollbar { /*toàn bộ ô cuộn*/
+/*toàn bộ ô cuộn*/
+/* ::-webkit-scrollbar { 
   width: 13px;
-  
+} */
+
+/* ẩn thanh scroll */
+::-webkit-scrollbar {
+  display: none !important;
 }
+
 * {
   margin: 0;
   padding: 0;
