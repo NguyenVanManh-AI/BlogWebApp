@@ -12,8 +12,8 @@
       <br><br><br><br><br>
       <div id="big">
         <div class="container col-4">
-            <form  @submit.prevent="register()" >
-              <div class="col-4 mx-auto"><router-link :to="{ name: 'DashboardMain' }" style="text-decoration: none !important;"><h2 style="font-weight: bold;font-size: 20px;color: #0076e5;" class="text-center"><i class="fa-solid fa-seedling"></i> Blog App</h2></router-link></div>
+            <form  @submit.prevent="register()" class="p-3">
+              <div class="col-6 mx-auto"><router-link :to="{ name: 'DashboardMain' }" style="text-decoration: none !important;"><h2 style="font-weight: bold;font-size: 20px;color: #0076e5;" class="text-center"><i class="fa-solid fa-seedling"></i> Blog App</h2></router-link></div>
               <br>
               <div class="form-group row">
                 <label for="staticEmail" class="col-4 col-form-label"><i class="fa-solid fa-signature"></i> Full Name  </label> 
@@ -102,15 +102,14 @@ export default {
         .then( data => {
           console.log(data);
           const { emitEvent } = useEventBus();
-          emitEvent('eventUserSuccess','Register Success !');
+          emitEvent('eventSuccess','Register Success !');
           setTimeout(()=>{
             this.$router.push({name:'UserLogin'}); 
-            window.location=window.location.href;
           }, 2000);
         })
         .catch(() => {
           const { emitEvent } = useEventBus();
-          emitEvent('eventUserError','Email already exists !');
+          emitEvent('eventError','Email already exists !');
         })
       },
     },
