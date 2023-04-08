@@ -61,3 +61,18 @@ class SearchView(APIView):
         article_serializer = SearchArticleSerializer(articles, many=True)
         data = user_serializer.data + article_serializer.data
         return Response({'data': data})
+
+from rest_framework import generics, permissions
+from .serializers import UserUpdateSerializer
+
+class UserUpdateAPIView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserUpdateSerializer
+    #permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
