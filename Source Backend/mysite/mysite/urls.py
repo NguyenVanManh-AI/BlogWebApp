@@ -21,7 +21,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         # Add custom claims
-        token['username'] = user.username
         token['email'] = user.email
         token['fullname'] = user.fullname
         token['gender'] = user.gender
@@ -33,7 +32,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data = super().validate(attrs)
 
         # Add extra responses here
-        data['username'] = self.user.username
         data['email'] = self.user.email
         data['fullname'] = self.user.fullname
         data['gender'] = self.user.gender

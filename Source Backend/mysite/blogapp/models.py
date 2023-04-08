@@ -37,13 +37,12 @@ class User(AbstractUser):
 
     id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=100, unique=True)
-    username = models.CharField(max_length=30, unique=True)
     password = models.CharField(max_length=100)
     
     fullname = models.CharField(max_length=100, blank=True, null=True)
     gender = models.BooleanField(blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     def __str__(self):
