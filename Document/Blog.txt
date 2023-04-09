@@ -90,13 +90,11 @@ CRUD
     + output : chỉ lấy 10 hàng đầu tiên (nếu ít hơn thì lấy ít hơn)
         + nếu là user thì mỗi hàng phải có 
             + lấy ra id 
-            + link ảnh đại diện 
+            + link ảnh đại diện  
             + lấy ra full name 
-            + type='user' (tự thêm để khi về client thì biết đây là user)
         + nếu là article thì mỗi hàng phải có 
             + lấy ra id 
             + lấy ra title 
-            + type='article' (tự thêm để khi về client thì biết đây là article)
 
     + cách làm :
         + full join hay left join ,... gì thì tùy => rồi lấy ra 10 hàng đầu tiên thoả mãn   

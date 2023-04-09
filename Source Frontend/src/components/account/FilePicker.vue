@@ -12,8 +12,8 @@
             
             <p v-if="isInitial">
               <!-- Drag your file(s) here to begin<br> or click to browse <i class="fa-regular fa-image"></i> --><!-- ///+++ -->
-              <img :src="url_img" v-if="user.url_img!=null"> <!-- ///+++ -->
-              <img src='../../assets/avatar.png' v-if="user.url_img==null"> <!-- ///+++ -->
+              <img :src="url_img" v-if="user.avatar!=null"> <!-- ///+++ -->
+              <img src='../../assets/avatar.png' v-if="user.avatar==null"> <!-- ///+++ -->
             </p>
             <p v-if="isSaving">
               Uploading {{ fileCount }} files...
@@ -86,21 +86,12 @@
         /// +++
         user : {
           id:null,
-          fullname:'',
-          username:'',
-          email: '',
-          phone: '',
-          google_id:null,
+          email:null,
           date_of_birth:null,
-          url_img:null,
           gender:null,
-          address:'',
-          status:null,
-          access_token:'',
-          refreshToken:'',
-          created_at:null,
-          updated_at:null,
-          email_verified_at:null,
+          fullname:null,
+          avatar:null,
+          access_token:null,
         },
         url_img:'',
         /// +++
@@ -125,12 +116,12 @@
     mounted() {
 
       this.user = JSON.parse(window.localStorage.getItem('user')); /// +++
-      if(this.user != null && this.user.url_img != null) this.url_img = config.API_URL + this.user.url_img; /// +++
+      if(this.user != null && this.user.avatar != null) this.url_img = config.API_URL + this.user.avatar; /// +++
 
       this.reset();
       const { onEvent } = useEventBus()
-      onEvent('eventUserUpfile',(idCustomer)=>{
-        this.saveReal(idCustomer);
+      onEvent('eventUserUpfile',(user)=>{
+        this.saveReal(user);
       })
 
       // upfile thành công thì reset lại hết 
@@ -162,28 +153,54 @@
       },
 
       /// +++ , thật ra up load 1 file nên không cần for cũng được , nhưng mình lười sửa lại 
-      saveReal(idCustomer){
-        // console.log(this.images);
-        for(var i=0;i<this.num;i++){
-          var formData = new FormData;
-          formData.set('photo',this.images[i]);
-          // BaseRequest.post('api/products/upfile?id='+idProduct,formData)
-
-          BaseRequest.post('api/customer/upfile?id='+idCustomer,formData)
-          .then(data => {
-            console.log(data);
-            this.user.url_img = data.link;
-            window.localStorage.setItem('user',JSON.stringify(this.user));
-
-            // console.log(url_img_user);
-            const { emitEvent } = useEventBus();
-            emitEvent('eventUserSuccess','Up Avatar Success !');
-          })
-          .catch(() => {
-            const { emitEvent } = useEventBus();
-            emitEvent('eventUserError','Up Avatar Failse !');
-          })
+      saveReal(user){
+        console.log(user)
+        const formData = new FormData();
+        formData.append('email', user.email);
+        formData.append('date_of_birth', user.date_of_birth);
+        formData.append('gender', user.gender);
+        formData.append('fullname', user.fullname);
+        if(this.images.length >= 1){
+          formData.set('avatar',this.images[0]);
         }
+
+        BaseRequest.patch('users/'+user.id+'/update-info',formData)
+        .then( (data) =>{
+          this.user = data;
+          if(this.user.avatar) this.user.avatar = data.avatar.split('/').slice(3).join('/');
+          const { emitEvent } = useEventBus();
+          emitEvent('eventSuccess','Edit Information Success !');
+          window.localStorage.setItem('user',JSON.stringify(this.user));
+          setTimeout(()=>{
+              window.location=window.location.href;
+          }, 1500);
+        }) 
+        .catch(()=>{
+            const { emitEvent } = useEventBus();
+            emitEvent('eventError','Edit Information Fail !');
+        })
+
+        // // console.log(this.images);
+        // for(var i=0;i<this.num;i++){
+        //   var formData = new FormData;
+        //   formData.set('photo',this.images[i]);
+        //   // BaseRequest.post('api/products/upfile?id='+idProduct,formData)
+
+        //   BaseRequest.post('api/customer/upfile?id='+idCustomer,formData)
+        //   .then(data => {
+        //     console.log(data);
+        //     this.user.url_img = data.link;
+        //     window.localStorage.setItem('user',JSON.stringify(this.user));
+
+        //     // console.log(url_img_user);
+        //     const { emitEvent } = useEventBus();
+        //     emitEvent('eventUserSuccess','Up Avatar Success !');
+        //   })
+        //   .catch(() => {
+        //     const { emitEvent } = useEventBus();
+        //     emitEvent('eventUserError','Up Avatar Failse !');
+        //   })
+        // }
       },
       /// +++
 
