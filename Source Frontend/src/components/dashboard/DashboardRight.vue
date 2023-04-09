@@ -5,8 +5,8 @@
                 <h1 class="" style="font-size: 20px;font-weight: bold;">{{ user.fullname }}</h1>
             </div>
             <div id="account" class="col-2 mr-0 d-flex align-items-end" @click="openModal = !openModal" v-if="user">
-                <img :src="user.url" alt="Avatar" v-if="user.url !== null" />
-                <img src='../../assets/avatar.png' alt="Avatar" v-if="user.url==null"> 
+                <img :src="user.url" alt="Avatar" v-if="user.avatar !== null" />
+                <img src='../../assets/avatar.png' alt="Avatar" v-if="user.avatar==null"> 
             </div>
             <div v-if="user==null" id="login">
                 <li @click="login"><span><i class="fa-solid fa-arrow-right-to-bracket"></i></span> Login </li>
@@ -24,7 +24,7 @@
 </template>
 <script>
 
-// import config from '../../config.js';
+import config from '../../config.js';
 
 export default {
     name : "DashboardRight",
@@ -34,13 +34,13 @@ export default {
     data(){
         return{
             user:{
-                id : null,
-                url : null,
-                email : null,
-                username : null,
-                fullname : null,
-                gender : null,
-                date_of_birth : null,
+                id:null,
+                email:null,
+                date_of_birth:null,
+                gender:null,
+                fullname:null,
+                avatar:null,
+                access_token:null,
             },
             openModal:false,
         }
@@ -50,7 +50,9 @@ export default {
     },
     mounted(){
         this.user = JSON.parse(window.localStorage.getItem('user'));
-        // if(this.user.url) this.user.url = config.API_URL + '/' + this.user.url ;
+        if(this.user){
+            if(this.user.avatar) this.user.avatar = config.API_URL + this.user.avatar ;
+        }
     },
     methods:{
         login(){
