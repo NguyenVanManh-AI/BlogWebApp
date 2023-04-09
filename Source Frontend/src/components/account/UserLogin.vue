@@ -87,7 +87,6 @@ export default {
           setTimeout(()=>{
             this.$router.push({name:'UserProfile'}); 
           }, 1000);
-          
         })
         .catch( () => {
           this.user = v; 
@@ -107,6 +106,7 @@ export default {
         }
         user = data;
         user.access_token = data.access;
+        user.id = 3;
         window.localStorage.setItem('user',JSON.stringify(user));
       },
     },

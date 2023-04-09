@@ -25,7 +25,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['fullname'] = user.fullname
         token['gender'] = user.gender
         token['date_of_birth'] = json.dumps(user.date_of_birth, indent = 4, sort_keys = True, default = str)
-        token['avatar'] = user.avatar.url if user.avatar else "null"
+        token['avatar'] = user.avatar.url if user.avatar else None
         return token
 
     def validate(self, attrs):
@@ -36,7 +36,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['fullname'] = self.user.fullname
         data['gender'] = self.user.gender
         data['date_of_birth'] = self.user.date_of_birth
-        data['avatar'] = self.user.avatar.url if self.user.avatar else "null"
+        data['avatar'] = self.user.avatar.url if self.user.avatar else None
         return data
 
 

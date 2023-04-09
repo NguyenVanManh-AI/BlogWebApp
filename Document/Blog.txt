@@ -92,12 +92,11 @@ CRUD
             + lấy ra id 
             + link ảnh đại diện 
             + lấy ra full name 
-            + type='user'
+            + type='user' (tự thêm để khi về client thì biết đây là user)
         + nếu là article thì mỗi hàng phải có 
             + lấy ra id 
             + lấy ra title 
-            + link ảnh bìa 
-            + type='article'
+            + type='article' (tự thêm để khi về client thì biết đây là article)
 
     + cách làm :
         + full join hay left join ,... gì thì tùy => rồi lấy ra 10 hàng đầu tiên thoả mãn   
@@ -129,7 +128,6 @@ ví dụ :
             {
                 id:99,
                 title:'Bài viết về lãnh tụ Nguyễn Tất Thành'
-                path: "/article/7dwDJLkCl1Bx0MQOXNFD--RJVUNZPJNM-4k.jpg", <- link ảnh bìa (chắc chắn có vì khi thêm bài viết phải thêm ảnh bìa),
                 type:'article'
             } 
         }
