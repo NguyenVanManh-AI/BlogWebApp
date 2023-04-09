@@ -51,7 +51,7 @@
                   </div>
               </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" @click="closeDelete" id="btnClose2">Close</button>
+                  <button type="button" id="close_btn" class="btn btn-outline-secondary" data-dismiss="modal" @click="closeDelete" >Close</button>
                   <button type="button" class="btn btn-outline-danger" @click="deleteArticle"><i class="fa-solid fa-trash"></i> Delete</button>
               </div>
           </div>
@@ -129,10 +129,19 @@ export default {
     },
     deleteArticle(){
       console.log(this.id_article_delete);
-      // call api delete article
-
-      // tải lại resource mới mà không cần phải reload lại trang 
-      this.getArticles(this.pageN);
+      BaseRequest.delete('articles/'+this.id_article_delete+'/')
+      .then( () => {
+          var close_btn = window.document.getElementById('close_btn');
+          close_btn.click();
+          const { emitEvent } = useEventBus();
+          emitEvent('eventSuccess','Delete Article Success !');
+          // tải lại resource mới mà không cần phải reload lại trang 
+          this.getArticles(this.pageN);
+      })
+      .catch( () => {
+          const { emitEvent } = useEventBus();
+          emitEvent('eventError','Delete Article Fail !');
+      })
     }
   },
 }

@@ -71,8 +71,7 @@ export default {
       add(){
         this.article.content = this.state.content;
         BaseRequest.post('articles/',this.article)
-        .then( data => {
-          console.log(data);
+        .then( () => {
           const { emitEvent } = useEventBus();
           emitEvent('eventSuccess','Add Article Success !');
           this.article.title = '';
