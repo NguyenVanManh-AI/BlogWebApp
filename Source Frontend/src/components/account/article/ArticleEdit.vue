@@ -1,7 +1,7 @@
 <template>
     <div id="add_article">
-      <form  @submit.prevent="add()">
-        <div class="d-flex justify-content-center mt-2" style="font-weight: bold;color: #0076e5;font-size: 20px;"><h1><i class="fa-solid fa-feather"></i> New Article</h1></div>
+      <form  @submit.prevent="save()">
+        <div class="d-flex justify-content-center mt-2" style="font-weight: bold;color: #0076e5;font-size: 20px;"><h1><i class="fa-solid fa-paper-plane"></i> Update Article</h1></div>
         <div style="margin-top: 30px;margin-bottom: 10px;color:gray;text-transform: uppercase;"><i class="fa-solid fa-paragraph"></i> Title</div>
         <div>
             <input v-model="article.title" required placeholder="Title Article" type="text" class="form-control" >
@@ -18,26 +18,30 @@
 
         <div class="dt1">
             <div>
-                <button type="submit" class="mt-4 btn-pers" id="login_button" ><i class="fa-solid fa-plus"></i> Add</button>
+                <button type="submit" class="mt-4 btn-pers" id="login_button" ><i class="fa-solid fa-floppy-disk"></i> Save</button>
             </div>
         </div>
       </form>
+    <Notification></Notification>
     </div>
 </template>
 <script>
-
+import BaseRequest from '../../../restful/user/core/BaseRequest';
+import useEventBus from '../../../composables/useEventBus'
+import Notification from '../../Notification'
 import { reactive } from "vue";
 export default {
     name : "ArticleEdit",
     components: {
-  
+        Notification
     },
     data(){
         return{
-          article:{
-            title:'',
-            content:''
-          }
+            article:{
+                title:'',
+                content:'',
+            },
+            id_article:null
         }
     },
     created(){
@@ -60,13 +64,32 @@ export default {
       };
     },
     mounted(){
-  
+        this.id_article = this.$route.params.id
+        BaseRequest.get('articles/'+this.id_article+'/')
+        .then( data => {
+            this.article = data ;
+            this.state.content = this.article.content;
+            const { emitEvent } = useEventBus();
+            emitEvent('eventSuccess','View Article Success !');
+        })
+        .catch( () => {
+          const { emitEvent } = useEventBus();
+          emitEvent('eventError','View Article Fail !');
+        })
     },
     methods:{
-      add(){
-        this.article.content = this.state.content;
-        console.log(this.article);
-      }
+        save(){
+            this.article.content = this.state.content;
+            BaseRequest.patch('articles/'+this.id_article+'/',this.article)
+            .then( () => {
+                const { emitEvent } = useEventBus();
+                emitEvent('eventSuccess','Edit Article Success !');
+            })
+            .catch( () => {
+                const { emitEvent } = useEventBus();
+                emitEvent('eventError','Edit Article Fail !');
+            })
+        }
     },
 }
 </script>
@@ -74,7 +97,6 @@ export default {
 #add_article {
   padding: 10px;
   min-height: -webkit-fill-available;
-  position: relative;
 }
 #content {
   margin-bottom: 100px;
@@ -84,9 +106,9 @@ export default {
 
 /* btn add */
 .btn-pers {
-  bottom: 30px;
+  bottom: 10%;
   position: absolute;
-  left: 50%;
+  right: -1%;
   padding: 1em 2.5em;
   font-size: 12px;
   text-transform: uppercase;
@@ -101,6 +123,7 @@ export default {
   cursor: pointer;
   outline: none;
   transform: translateX(-50%);
+  border: 2px solid #0085FF;
 }
 
 .btn-pers:hover {

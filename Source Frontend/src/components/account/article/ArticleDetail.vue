@@ -1,19 +1,10 @@
 <template>
     <div id="add_article">
-        <div class="d-flex justify-content-center mt-2" style="font-weight: bold;color: #0076e5;font-size: 20px;"><h1><i class="fa-solid fa-feather"></i> {{id_article}}New Article</h1></div>
-        <div style="margin-top: 30px;margin-bottom: 10px;color:gray;text-transform: uppercase;"><i class="fa-solid fa-paragraph"></i> Title</div>
-        <div>
-            {{ article.title }}
-        </div>
-
-        <div style="margin-top: 30px;margin-bottom: 10px;color:gray;text-transform: uppercase;"><i class="fa-solid fa-file-pen"></i> Content</div>
-        <div id="content">
-            {{ article.content }}
-        </div>
-
+        <div class="d-flex justify-content-center mt-2 text-center" id="title_article" style="font-weight: bold;color: #0076e5;font-size: 26px;font-style: italic;"><h1><i class="fa-solid fa-feather"></i>  {{ article.title }}</h1></div>
+        <div id="content_html"></div>
         <div class="dt1">
             <div>
-                <button @click="editArticle" type="submit" class="mt-4 btn-pers" id="login_button" ><i class="fa-solid fa-plus"></i> Edit</button>
+                <button @click="editArticle" type="submit" class="mt-4 btn-pers" id="login_button" ><i class="fa-solid fa-pen-to-square"></i> Edit</button>
             </div>
         </div>
       <Notification></Notification>
@@ -52,7 +43,9 @@ export default {
 
         BaseRequest.get('articles/'+this.id_article+'/')
         .then( data => {
-            this.article = data ; 
+        this.article = data ;
+            var content = window.document.getElementById('content_html');
+            content.innerHTML = this.article.content; 
           const { emitEvent } = useEventBus();
           emitEvent('eventSuccess','View Article Success !');
         })
@@ -72,19 +65,25 @@ export default {
 #add_article {
   padding: 10px;
   min-height: -webkit-fill-available;
-  position: relative;
 }
 #content {
   margin-bottom: 100px;
 }
 
 
+#content_html {
+    margin-top: 30px;
+    padding: 0px 20px 60px 20px;
+    margin-bottom: 20px;
+    border: 2px solid silver;
+    border-radius: 20px;
+}
 
 /* btn add */
 .btn-pers {
-  bottom: 30px;
+  bottom: 10%;
   position: absolute;
-  left: 50%;
+  right: -1%;
   padding: 1em 2.5em;
   font-size: 12px;
   text-transform: uppercase;
@@ -99,6 +98,7 @@ export default {
   cursor: pointer;
   outline: none;
   transform: translateX(-50%);
+  border: 2px solid #0085FF;
 }
 
 .btn-pers:hover {
@@ -106,6 +106,7 @@ export default {
   box-shadow: 0px 15px 20px rgba(46, 138, 229, 0.4);
   color: #fff;
   transform: translate(-50%, -7px);
+  border: 2px solid white;
 }
 
 .btn-pers:active {
