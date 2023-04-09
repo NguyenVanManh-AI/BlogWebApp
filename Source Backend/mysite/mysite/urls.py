@@ -25,7 +25,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['fullname'] = user.fullname
         token['gender'] = user.gender
         token['date_of_birth'] = json.dumps(user.date_of_birth, indent = 4, sort_keys = True, default = str)
-        
+        token['avatar'] = user.avatar.url if user.avatar else "null"
         return token
 
     def validate(self, attrs):
@@ -36,6 +36,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['fullname'] = self.user.fullname
         data['gender'] = self.user.gender
         data['date_of_birth'] = self.user.date_of_birth
+        data['avatar'] = self.user.avatar.url if self.user.avatar else "null"
         return data
 
 
@@ -47,9 +48,9 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
     path('', include('blogapp.urls')),
     path('api/register', UserRegisterView.as_view(), name='register'),
     path('api/login', CustomTokenObtainPairView.as_view(), name='login'),
-    path('search/', SearchView.as_view(), name='search'),
+    path('search', SearchView.as_view(), name='search'),
 ]

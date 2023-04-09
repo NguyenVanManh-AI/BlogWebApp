@@ -42,6 +42,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+# MIDDLEWARE = [
+    
+#     'django.middleware.security.SecurityMiddleware',
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+# ]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -54,17 +65,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
-
-CORS_ORIGIN_WHITELIST = [
-    'http://google.com',
-    'http://hostname.example.com',
-    'http://localhost:8000',
-    'http://localhost:8080',
-    'http://127.0.0.1:9000',
-    'https://pbl-5.vercel.app',
-    'https://pbl5.vercel.app'
-]
 
 ROOT_URLCONF = 'mysite.urls'
 
@@ -150,3 +150,5 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 ##
 AUTH_USER_MODEL = 'blogapp.User'
+
+

@@ -1,11 +1,15 @@
 from rest_framework import viewsets
-from .models import User, Article, Comments, Avatar, CoverImage
-from .serializers import UserPasswordUpdateSerializer, UserSerializer, ArticleSerializer, CommentsSerializer, AvatarSerializer, CoverImageSerializer, SearchUserSerializer, SearchArticleSerializer
+from .models import User, Article, Comments
+from .serializers import UserPasswordUpdateSerializer, UserSerializer, ArticleSerializer
+from .serializers import CommentsSerializer, SearchUserSerializer, SearchArticleSerializer, UserUpdateSerializer
 
-##
+from rest_framework.response import Response
+
 from rest_framework.views import APIView, status
 from django.http import JsonResponse
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
+
+from rest_framework import generics, permissions
 
 # Viewsets for User model
 class UserViewSet(viewsets.ModelViewSet):
@@ -21,16 +25,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
 class CommentsViewSet(viewsets.ModelViewSet):
     queryset = Comments.objects.all()
     serializer_class = CommentsSerializer
-
-# Viewsets for Avatar model
-class AvatarViewSet(viewsets.ModelViewSet):
-    queryset = Avatar.objects.all()
-    serializer_class = AvatarSerializer
-
-# Viewsets for CoverImage model
-class CoverImageViewSet(viewsets.ModelViewSet):
-    queryset = CoverImage.objects.all()
-    serializer_class = CoverImageSerializer
 
 
 class UserRegisterView(APIView):
@@ -50,7 +44,6 @@ class UserRegisterView(APIView):
                 'errors_code': 400,
             }, status=status.HTTP_400_BAD_REQUEST)
 
-from rest_framework.response import Response
 
 class SearchView(APIView):
     def get(self, request):
@@ -62,8 +55,6 @@ class SearchView(APIView):
         data = user_serializer.data + article_serializer.data
         return Response({'data': data})
 
-from rest_framework import generics, permissions
-from .serializers import UserUpdateSerializer
 
 class UserUpdateAPIView(generics.UpdateAPIView):
     queryset = User.objects.all()
@@ -84,8 +75,12 @@ class UserPasswordUpdateAPIView(generics.UpdateAPIView):
 
     def patch(self, request, *args, **kwargs):
         instance = self.get_object()
-        password = make_password(request.data.get('password'))
-        instance.password = password
-        instance.save(update_fields=['password'])
-        serializer = self.get_serializer(instance)
-        return Response({'message': 'Password Changed'}, status=status.HTTP_200_OK)
+        oldpassword = request.data.get('oldpassword')
+        newpassword = make_password(request.data.get('password'))
+        if check_password(oldpassword, instance.password):
+            instance.password = newpassword
+            instance.save(update_fields=['password'])
+            serializer = self.get_serializer(instance)
+            return Response({'message': 'Password Changed'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Incorrect Old Password'}, status=status.HTTP_400_BAD_REQUEST)

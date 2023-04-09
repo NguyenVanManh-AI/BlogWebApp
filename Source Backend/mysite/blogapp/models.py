@@ -20,6 +20,9 @@ class User(AbstractUser):
     fullname = models.CharField(max_length=100, blank=False, null=False)
     gender = models.BooleanField(blank=False, null=False)
     date_of_birth = models.DateField(blank=False, null=True)
+    avatar = models.ImageField(upload_to='static/avatars/', null=True)
+
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['password','fullname','date_of_birth','gender',]
 
@@ -48,20 +51,5 @@ class Comments(models.Model):
     def __str__(self):
         return str(self.id)
 
-class Avatar(models.Model):
-    id = models.AutoField(primary_key=True)
-    id_user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='avatar')
-    path = models.ImageField(upload_to='static/avatars/')
 
-    def __str__(self):
-        return str(self.id)
-    
-class CoverImage(models.Model):
-    id = models.AutoField(primary_key=True)
-    id_article = models.OneToOneField(Article, on_delete=models.CASCADE, related_name='cover_image')
-    path = models.ImageField(upload_to='static/cover_images/')
-
-    def __str__(self):
-        return str(self.id)
-    
 
