@@ -44,18 +44,31 @@ class UserRegisterView(APIView):
                 'errors_code': 400,
             }, status=status.HTTP_400_BAD_REQUEST)
 
+from django.db.models import Q
+from django.http import JsonResponse
+class SearchView(generics.ListAPIView):
+    serializer_class = None
 
-class SearchView(APIView):
-    def get(self, request):
-        text_search = request.GET.get('text_search', '').strip()
-        users = User.objects.filter(fullname__icontains=text_search)[:10]
-        articles = Article.objects.filter(title__icontains=text_search)[:10-len(users)]
-        user_serializer = SearchUserSerializer(users, many=True)
-        article_serializer = SearchArticleSerializer(articles, many=True)
-        data = user_serializer.data + article_serializer.data
-        return Response({'data': data})
+    def post(self, request):
+        search_query = request.data.get('text_search', '')
+        query = Q(fullname__icontains=search_query)
+        queryset = User.objects.filter(query)[:10]
 
+        data = []
+        for user in queryset:
+            user_serializer = UserSerializer(user)
+            data.append({'user': user_serializer.data})
 
+        if queryset.count() < 10:
+            remaining = 10 - queryset.count()
+            articles = Article.objects.filter(title__icontains=search_query)[:remaining]
+
+            for article in articles:
+                article_serializer = ArticleSerializer(article)
+                data.append({'aritcle': article_serializer.data})
+
+        return JsonResponse({'results': data})
+    
 import os
 from django.conf import settings
 class UserUpdateAPIView(generics.UpdateAPIView):
