@@ -56,6 +56,8 @@ class SearchView(APIView):
         return Response({'data': data})
 
 
+import os
+from django.conf import settings
 class UserUpdateAPIView(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserUpdateSerializer
@@ -65,8 +67,21 @@ class UserUpdateAPIView(generics.UpdateAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
+
+        if 'avatar' in request.data:
+            # Xóa ảnh cũ
+            if instance.avatar:
+                path = instance.avatar.path
+                if os.path.isfile(os.path.join(settings.MEDIA_ROOT, path)):
+                    os.remove(os.path.join(settings.MEDIA_ROOT, path))
+                    
+            # Lưu ảnh mới
+            instance.avatar = request.data['avatar']
+
+
         serializer.save()
         return Response(serializer.data)
+
     
 class UserPasswordUpdateAPIView(generics.UpdateAPIView):
     queryset = User.objects.all()
