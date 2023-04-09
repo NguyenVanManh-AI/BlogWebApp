@@ -1,12 +1,11 @@
 <template>
     <div id="profile" >
         <ParticleVue32></ParticleVue32>
-        <img v-if="user.url_img != null" :src="url_img">
+        <img v-if="user.avatar != null" :src="url_img">
         <!-- bind style này hoặc động tốt chỉ là tìm cách khác để style thêm opacity -->
         <!-- <div id="details" :style="[ user.url_img != null ? {'background-image': 'url(' + url_img + ')'} : { 'background-color': 'white' }]"> -->
         <div id="details" class="col-12">
             <form class="col-12 p-0" @submit.prevent="saveInfor">
-                <input type="file" @change="onFileChange" name="avatar"/>
                 <div class="row" >
                     <div class="col-9">
                         <div style="color:gray"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</div>
@@ -58,7 +57,7 @@
 
 <script scoped>
 
-import BaseRequest from '../../restful/user/core/BaseRequest';
+// import BaseRequest from '../../restful/user/core/BaseRequest';
 import useEventBus from '../../composables/useEventBus';
 import Notification from './../Notification';
 import config from '../../config.js';
@@ -84,7 +83,7 @@ export default {
                 date_of_birth:null,
                 gender:null,
                 fullname:null,
-                url:null,
+                avatar:null,
                 access_token:null,
             },
             url_img:''
@@ -101,46 +100,16 @@ export default {
     mounted(){
 
         this.user = JSON.parse(window.localStorage.getItem('user'));
-        if(this.user != null && this.user.url_img != null) this.url_img = config.API_URL + this.user.url_img;
+        if(this.user != null && this.user.avatar != null) this.url_img = config.API_URL + this.user.avatar;
 
     },
     methods:{
-        onFileChange(event) {
-            this.imageFile = event.target.files[0];
-        },
         saveInfor:function(){
-            var idCustomer = this.user.id;
-            const formData = new FormData();
-            formData.append('email', this.user.email);
-            formData.append('date_of_birth', this.user.date_of_birth);
-            formData.append('gender', this.user.gender);
-            formData.append('fullname', this.user.fullname);
-            // formData.append('image', this.imageFile);
-            formData.set('avatar',this.imageFile);
 
-            console.log(formData);
-            console.log(this.imageFile);
-            console.log(this.user);
-            for (const [key, value] of formData.entries()) {
-                console.log(key + ': ' + value);
-            }
+            const { emitEvent } = useEventBus();
+            emitEvent('eventUserUpfile',this.user);
+            setTimeout(()=>{emitEvent('eventUserResetUpfile');}, 2000);
 
-            BaseRequest.patch('users/'+idCustomer+'/update-info',formData)
-            .then( () =>{
-                const { emitEvent } = useEventBus();
-                // emitEvent('eventUserUpfile',idCustomer);
-                // setTimeout(()=>{emitEvent('eventUserResetUpfile');}, 2000);
-
-                emitEvent('eventSuccess','Edit Information Success !');
-                window.localStorage.setItem('user',JSON.stringify(this.user));
-                setTimeout(()=>{
-                    // window.location=window.location.href;
-                }, 1500);
-            }) 
-            .catch(()=>{
-                const { emitEvent } = useEventBus();
-                emitEvent('eventSuccess','Edit Information Fail !');
-            })
         },
     }
 }
@@ -185,7 +154,7 @@ export default {
     top: 0px;
     opacity: 0.9;
     min-width: 100%;
-    max-height: 100%;
+    max-height: 120%;
     object-fit: cover;
     filter: blur(8px);
     -webkit-filter: blur(8px);

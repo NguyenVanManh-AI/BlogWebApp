@@ -5,7 +5,7 @@
                 <h1 class="" style="font-size: 20px;font-weight: bold;">{{ user.fullname }}</h1>
             </div>
             <div id="account" class="col-2 mr-0 d-flex align-items-end" @click="openModal = !openModal" v-if="user">
-                <img :src="user.url" alt="Avatar" v-if="user.avatar !== null" />
+                <img :src="user.avatar" alt="Avatar" v-if="user.avatar !== null" />
                 <img src='../../assets/avatar.png' alt="Avatar" v-if="user.avatar==null"> 
             </div>
             <div v-if="user==null" id="login">

@@ -105,6 +105,8 @@ export default {
           access_token:null,
         }
         user = data;
+        if(user.avatar) user.avatar = user.avatar.slice(1);
+        console.log(user);
         user.access_token = data.access;
         window.localStorage.setItem('user',JSON.stringify(user));
       },
