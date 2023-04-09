@@ -6,6 +6,7 @@
         <!-- <div id="details" :style="[ user.url_img != null ? {'background-image': 'url(' + url_img + ')'} : { 'background-color': 'white' }]"> -->
         <div id="details" class="col-12">
             <form class="col-12 p-0" @submit.prevent="saveInfor">
+                <input type="file" @change="onFileChange" name="avatar"/>
                 <div class="row" >
                     <div class="col-9">
                         <div style="color:gray"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</div>
@@ -104,24 +105,37 @@ export default {
 
     },
     methods:{
+        onFileChange(event) {
+            this.imageFile = event.target.files[0];
+        },
         saveInfor:function(){
             var idCustomer = this.user.id;
-            BaseRequest.patch('api/customer/update-profile',this.user)
+            const formData = new FormData();
+            formData.append('email', this.user.email);
+            formData.append('date_of_birth', this.user.date_of_birth);
+            formData.append('gender', this.user.gender);
+            formData.append('fullname', this.user.fullname);
+            // formData.append('image', this.imageFile);
+            formData.set('avatar',this.imageFile);
+
+            console.log(formData);
+            console.log(this.imageFile);
+            console.log(this.user);
+            for (const [key, value] of formData.entries()) {
+                console.log(key + ': ' + value);
+            }
+
+            BaseRequest.patch('users/'+idCustomer+'/update-info',formData)
             .then( () =>{
                 const { emitEvent } = useEventBus();
-                emitEvent('eventUserUpfile',idCustomer);
-                setTimeout(()=>{emitEvent('eventUserResetUpfile');}, 2000);
+                // emitEvent('eventUserUpfile',idCustomer);
+                // setTimeout(()=>{emitEvent('eventUserResetUpfile');}, 2000);
 
                 emitEvent('eventSuccess','Edit Information Success !');
-
                 window.localStorage.setItem('user',JSON.stringify(this.user));
-
-                this.err = null;
-
                 setTimeout(()=>{
-                    window.location=window.location.href;
+                    // window.location=window.location.href;
                 }, 1500);
-
             }) 
             .catch(()=>{
                 const { emitEvent } = useEventBus();
