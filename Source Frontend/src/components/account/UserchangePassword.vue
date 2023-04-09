@@ -125,66 +125,29 @@
               return 0;
           }
           else {
-            console.log(this.changepw);
-
-            console.log(this.status);
-            if(this.status == true){
-              BaseRequest.post('api/customer/change-password?id='+this.user.id,this.changepw)
-              .then( () =>{
-    
-                  this.changepw.current_password='';
-                  this.changepw.new_password='';
-                  this.changepw.new_password_confirmation='';
-                  this.checked = false;
-    
-                  const { emitEvent } = useEventBus();
-                  emitEvent('eventUserSuccess','Change For Password Success !');
-              }) 
-              .catch(error=>{
-                  console.log(error);
-                  const { emitEvent } = useEventBus();
-                  emitEvent('eventUserError',error.response.data.message);
-              })
+            var changepw2 = {
+              password : this.changepw.new_password,
+              oldpassword : this.changepw.current_password
             }
-            else {
-              console.log(this.changepw);
-              BaseRequest.post('api/customer/create-pw?id='+this.user.id,this.changepw)
-              .then( () =>{
-    
-                  this.changepw.current_password='';
-                  this.changepw.new_password='';
-                  this.changepw.new_password_confirmation='';
-                  this.checked = false;
-    
-                  const { emitEvent } = useEventBus();
-                  emitEvent('eventUserSuccess','Change For Password Success !');
-    
-                  setTimeout(()=>{
-                      window.location=window.location.href;
-                  }, 1500);
-              }) 
-              .catch(error=>{
-                  const { emitEvent } = useEventBus();
-                  emitEvent('eventUserError',error.response.data.message);
-              })
-            }
+            console.log(changepw2);
+            BaseRequest.patch('users/3/changepassword',changepw2)
+            .then( () =>{
+                this.changepw.current_password='';
+                this.changepw.new_password='';
+                this.changepw.new_password_confirmation='';
+                this.checked = false;
+                const { emitEvent } = useEventBus();
+                emitEvent('eventSuccess','Change For Password Success !');
+            }) 
+            .catch(()=>{
+                const { emitEvent } = useEventBus();
+                emitEvent('eventError','Change For Password Fail !');
+            })
           }
         },
     }
   }
   </script>
-  
-  <!-- 
-  
-  + Xử lí đổi mật khẩu cho người dùng đăng nhập bằng google 
-      + vì họ có password là NULL nên không có mật khẩu cũ . 
-      + Khi mới vào Component Change Password là gọi lên server => kiểm tra tài khoản đó có password hay không 
-      nếu có trả về true , không trả về false => dùng cái này để ẩn hiện input password cũ luôn , 
-  
-      + Để cho đơn giản (mặt dù code dài dòng hơn chút nhưng khỏe) thì code thêm một hàm đổi mật khẩu trong CustomerAuth 
-      + Khi bấm save thì với biến kiểm tra được lấy về ngay từ đầu (true hoặc false) thì tùy vào đó mà gọi hàm nào trên server . 
-          Chỉ cần kiểm tra mật khẩu mới và cũ giống nhau và đúng quy tắc là được => là cập nhật lại mật khậu cho họ . 
-   -->
   <style scoped>
   *{
     transition: all 1s ease;
