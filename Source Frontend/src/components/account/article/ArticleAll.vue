@@ -13,7 +13,7 @@
         <tbody v-for="(article,index) in articles" :key="index">
           <tr class="hover_title">
             <th scope="row"><span>{{ (pageN-1)*6+index+1 }}</span></th>
-            <td class="col-12 align-center">{{ article.title }}</td>
+            <td style="cursor: pointer;" class="col-12 align-center" @click="viewArticle(article.id)">{{ article.title }}</td>
             <td><div class="btn_center"><button @click="viewArticle(article.id)"  type="button" class="btn btn-primary"><i class="fa-solid fa-eye"></i></button></div></td>
             <td><div class="btn_center"><button @click="editArticle(article.id)" type="button" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></button></div></td>
             <td><div class="btn_center"><button @click="openModel(article.id);"  data-toggle="modal" data-target="#exampleModalDelete" type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></div></td>
@@ -117,6 +117,12 @@ export default {
         const { emitEvent } = useEventBus();
         emitEvent('eventError','Get All Article Fail !');
       })
+    },
+    viewArticle(id){
+      this.$router.push({name:'ArticleDetail',params:{id:id}}); 
+    },
+    editArticle(id){
+      this.$router.push({name:'ArticleEdit',params:{id:id}}); 
     },
     openModel(id){
       this.id_article_delete = id;

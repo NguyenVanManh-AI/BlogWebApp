@@ -102,7 +102,7 @@ export default {
           date_of_birth:null,
           gender:null,
           fullname:null,
-          url:null,
+          avatar:null,
           access_token:null,
         }
         user = data;
