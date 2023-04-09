@@ -56,3 +56,11 @@ class UserPasswordUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('password', 'oldpassword')
+
+class CommentWithUserInfoSerializer(serializers.ModelSerializer):
+    fullname = serializers.CharField(source='id_user.fullname', read_only=True)
+    avatar = serializers.ImageField(source='id_user.avatar', read_only=True)
+
+    class Meta:
+        model = Comments
+        fields = ['id', 'id_user', 'id_article', 'content', 'created_at', 'updated_at', 'fullname', 'avatar']
