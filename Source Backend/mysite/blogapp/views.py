@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from .models import User, Article, Comments
 from .serializers import UserPasswordUpdateSerializer, UserSerializer, ArticleSerializer
-from .serializers import CommentsSerializer, SearchUserSerializer, SearchArticleSerializer, UserUpdateSerializer
-
+from .serializers import CommentsSerializer, SearchUserSerializer, CommentWithUserInfoSerializer,SearchArticleSerializer, UserUpdateSerializer
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from rest_framework.views import APIView, status
@@ -84,3 +84,51 @@ class UserPasswordUpdateAPIView(generics.UpdateAPIView):
             return Response({'message': 'Password Changed'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Incorrect Old Password'}, status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['GET'])
+def comments_for_article(request, article_id):
+    comments = Comments.objects.filter(id_article=article_id).order_by('-created_at')
+    serializer = CommentWithUserInfoSerializer(comments, many=True)
+    return Response(serializer.data)
+
+from rest_framework.pagination import PageNumberPagination
+
+class CustomPagination(PageNumberPagination):
+    page_size = 10
+
+class CustomPagination2(PageNumberPagination):
+    page_size = 10
+
+class ArticleListView(APIView):
+    def get(self, request):
+        paginator = CustomPagination()
+        articles = Article.objects.all()
+        paginated_articles = paginator.paginate_queryset(articles, request)
+        article_serializer = ArticleSerializer(paginated_articles, many=True)
+
+        data = []
+        for article_data in article_serializer.data:
+            user = User.objects.get(id=article_data['id_user'])
+            user_serializer = UserSerializer(user)
+            comments = Comments.objects.filter(id_article=article_data['id'])
+            comment_serializer = CommentsSerializer(comments, many=True)
+            data.append({'article': article_data, 'user': user_serializer.data, 'comment': comment_serializer.data})
+
+        return paginator.get_paginated_response(data)
+    
+class UserArticleListView(APIView):
+    def get(self, request, user_id):
+        paginator = CustomPagination2()
+        articles = Article.objects.filter(id_user=user_id)
+        paginated_articles = paginator.paginate_queryset(articles, request)
+        article_serializer = ArticleSerializer(paginated_articles, many=True)
+
+        data = []
+        for article_data in article_serializer.data:
+            user = User.objects.get(id=article_data['id_user'])
+            user_serializer = UserSerializer(user)
+            comments = Comments.objects.filter(id_article=article_data['id'])
+            comment_serializer = CommentsSerializer(comments, many=True)
+            data.append({'article': article_data, 'user': user_serializer.data, 'comment': comment_serializer.data})
+
+        return paginator.get_paginated_response(data)
