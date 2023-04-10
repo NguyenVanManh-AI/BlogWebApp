@@ -16,4 +16,5 @@ urlpatterns = [
     path('users/<int:pk>/update-info', UserUpdateAPIView.as_view(), name='user-info-update'),
     path('users/<int:pk>/changepassword', UserPasswordUpdateAPIView.as_view(), name='user-change-password'),
     path('articles/<int:article_id>/comments/', comments_for_article, name='comments_for_article'),
+    
 ]
