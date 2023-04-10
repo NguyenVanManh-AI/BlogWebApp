@@ -125,7 +125,7 @@ class CustomPagination(PageNumberPagination):
     page_size = 10
 
 class CustomPagination2(PageNumberPagination):
-    page_size = 10
+    page_size = 6
 
 class ArticleListView(APIView):
     def get(self, request):
@@ -143,6 +143,24 @@ class ArticleListView(APIView):
             data.append({'article': article_data, 'user': user_serializer.data, 'comment': comment_serializer.data})
 
         return paginator.get_paginated_response(data)
+    
+class SingleArticleListView(APIView):
+    def get(self, request, id_article):
+        paginator = CustomPagination()
+        articles = Article.objects.filter(id=id_article)
+        paginated_articles = paginator.paginate_queryset(articles, request)
+        article_serializer = ArticleSerializer(paginated_articles, many=True)
+
+        data = []
+        for article_data in article_serializer.data:
+            user = User.objects.get(id=article_data['id_user'])
+            user_serializer = UserSerializer(user)
+            comments = Comments.objects.filter(id_article=article_data['id'])
+            comment_serializer = CommentsSerializer(comments, many=True)
+            data.append({'article': article_data, 'user': user_serializer.data, 'comment': comment_serializer.data})
+
+        return paginator.get_paginated_response(data)
+   
     
 class UserArticleListView(APIView):
     def get(self, request, user_id):
