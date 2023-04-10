@@ -45,6 +45,14 @@ export default {
   box-sizing: border-box;
   list-style: none;
 }
+
+.modal-header button.close {
+  padding-right: 50px;
+  padding-top: 30px;
+}
+.modal.fade {
+  background-color: #3d3d3d99;
+}
 a {
   text-decoration: none;
 }

@@ -1,0 +1,121 @@
+
+
+Trang chủ lấy ra tất cả bài viết trong db => có phân trang => 10 bài mỗi trang  , trong 10 bài thì mỗi bài cụ thể phải có 
+Article 
+    + Lấy bài viết cụ thể 
+        => lấy ra full thông tin của article đó 
+        => lấy ra full thông tin của người dùng tạo article đó 
+
+        ví dụ : bài viết có id = 9 của người dùng có id = 3 (id_user = 3 của bài viết)
+        và bài viết id = 9 có các comment là có id 2,3,4,7,9
+
+        // thông tin người dùng sở hữu bài viết 
+        id:null,
+        email:null,
+        date_of_birth:null,
+        gender:null,
+        fullname:null,
+        avatar:null,
+        access_token:null,
+
+        // bài viết 
+        id
+        id_user
+        title
+        content
+        created_at
+        updated_at
+
+        // lấy ra tất cả những comment của bài viết đấu 
+        id = 2,3,4,7,9 => lấy ra full thông tin của mỗi comment 
+
+
+        {
+            [
+                {
+                    article : {  => // bài viết  
+                        id
+                        id_user
+                        title
+                        content
+                        created_at
+                        updated_at
+                    },
+                    user : { => // thông tin người dùng sở hữu bài viết 
+                        id:null,
+                        email:null,
+                        date_of_birth:null,
+                        gender:null,
+                        fullname:null,
+                        avatar:null,
+                    },
+                    comment : [ => comment của bài viết đó 
+                        {
+                            id 
+                            id_user
+                            id_article
+                            content
+                            fullname (của user có id_user tương ứng)
+                            avatar (path ảnh đại diện của user có id_user tương ứng)
+                        },
+                        {
+                            id
+                            id_user
+                            id_article
+                            content
+                            fullname (của user có id_user tương ứng)
+                            avatar (path ảnh đại diện của user có id_user tương ứng)
+                        },
+                        {
+                            id
+                            id_user
+                            id_article
+                            content
+                            fullname (của user có id_user tương ứng)
+                            avatar (path ảnh đại diện của user có id_user tương ứng)
+                        }
+                    }
+                }
+            ],
+        }
+
+
+
+
+
+
+
+    + Lấy ra những bài viết của user có id_user 
+        + Sắp xếp mới nhất lên đầu 
+        + Mỗi trang 6 bài viết 
+
+    + Update bài viết => gửi id bài viết lên => 
+        + id (id bài viết) 
+        + title 
+        + content 
+    
+    + Delete bài viết => gửi id => xóa bài viết 
+
+
+Comment
+    + Lấy ra tất cả comment của bài viết có id = ... và sắp xếp comment mới nhất lên đầu (không phân trang)
+    +  
+        id
+        id_user
+        id_article
+        content
+        fullname (của user có id_user tương ứng)
+        avatar (path ảnh đại diện của user có id_user tương ứng)
+    
+Update Comment 
+    + id (của comment) 
+    + content tương ứng 
+
+Xóa 
+    + id => xóa comment có id này 
+
+
+
+
+
+
