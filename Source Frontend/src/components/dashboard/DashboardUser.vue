@@ -28,7 +28,9 @@
           </div>
         </div>
       </div>
+      <!-- Model Post Aticle -->
 
+      <!-- Article -->
       <div v-for="(article,index) in articles" :key="index" class="big_article">
         <div class="header_article">
           <div class="avatar_article">
@@ -52,28 +54,32 @@
           </div>
         </div>
         <div class="content_main_article">
-          <div class="main_title">
+          <div @click="get_article_detail(article)" class="main_title" data-toggle="modal" data-target="#modalArticleDetails" >
             <i class="fa-solid fa-play"></i> {{ article.article.title }}
           </div>
           <div class="main_center">
             <i class="fa-solid fa-blog"></i>
           </div>
-          <div class="main_content">
+          <div class="main_content" >
             <div v-html="article.article.content"></div>
           </div>
         </div>
         <div class="footer_article">
-          <div class="footer_number_comment">
+          <div @click="get_article_detail(article)" class="footer_number_comment" data-toggle="modal" data-target="#modalArticleDetails" >
               <!-- {{ article.comment.length }} -->
             9999 Comments
           </div>
           <div class="footer_comment_article">
-            <div><span><i class="fa-regular fa-message"></i></span> <span>Comments</span></div>
-            <div><span><i class="fa-regular fa-eye"></i></span> <span>View Details</span></div>
+            <div @click="get_article_detail(article)" data-toggle="modal" data-target="#modalArticleDetails" ><span><i class="fa-regular fa-message"></i></span> <span>Comments</span></div>
+            <div @click="get_article_detail(article)" data-toggle="modal" data-target="#modalArticleDetails"><span><i class="fa-regular fa-eye"></i></span> <span>View Details</span></div>
           </div>
         </div>
 
 
+      <!-- Article -->
+
+      
+      <!-- Model Post Aticle -->
 
         <!-- <div >
           <p> <br> article.article.id : {{ article.article.id }} </p>
@@ -89,6 +95,28 @@
           {{ article.user.avatar }}
         </div> -->
       </div>
+
+      <!-- Model Aticle Detail -->
+      <div v-if="user" class="modal fade" id="modalArticleDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog fix_width_modal" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;color: #0076e5;font-size: 20px;"><i class="fa-solid fa-feather"></i> Details Article</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <ModalArticle v-bind:article="this.article_detail"></ModalArticle>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      
 
 
 
@@ -134,6 +162,7 @@ import Paginate from 'vuejs-paginate-next';
 // import FilePicker from './FilePicker.vue';
 
 import ModalPostArticle from './ModalPostArticle'
+import ModalArticle from './ModalArticle'
 
 export default {
     name : "DashboardUser",
@@ -141,6 +170,7 @@ export default {
       Notification,
       ModalPostArticle,
       paginate: Paginate,
+      ModalArticle
     },
     data(){
         return{
@@ -156,6 +186,7 @@ export default {
           articles:null,
           pageN:1,
           quantity:null,
+          article_detail:null,
           // length_articles:null,
           // show_setting: new Array(this.length_articles).fill(false),
           show_setting: new Array(10).fill(false), // vì mỗi lần mình lấy ra 10 bài viết nên k cần tính nữa, thiếu thì ít hơn 10 bài viết thôi 
@@ -233,6 +264,10 @@ export default {
       clickCallback:function(pageNum){
         this.pageN = pageNum;
         this.getArticles(pageNum);
+      },
+      get_article_detail(article){
+        this.article_detail = article;
+        // console.log(this.article_detail);
       },
 
 
@@ -426,6 +461,7 @@ div.show_setting li .setting_icon{
   font-style: italic;
   padding-top: 10px;
   margin-bottom: 10px;
+  /* cursor: pointer; */
   
   /* Sử dụng kỹ thuật clamp() để giới hạn chiều cao */
   height: clamp(0px, 60px, auto);
@@ -452,6 +488,7 @@ div.show_setting li .setting_icon{
 /* footer */
 .footer_article {
   margin-top: 10px;
+  border-top: 1px solid silver;
 }
 
 .footer_number_comment {
@@ -505,7 +542,10 @@ div.show_setting li .setting_icon{
 }
 
 
-
+/* ModalArticle */
+.fix_width_modal {
+  width: 60% !important;
+}
 
 
 
