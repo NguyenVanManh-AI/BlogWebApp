@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from .views import UserViewSet, ArticleViewSet, CommentsViewSet
-from .views import UserPasswordUpdateAPIView, UserUpdateAPIView, comments_for_article, ArticleListView, UserArticleListView, SingleArticleListView
+from .views import UserPasswordUpdateAPIView, UserUpdateAPIView, comments_for_article, ArticleListView, UserArticleListView, SingleArticleListView, comments, comments_by_id
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -16,5 +16,7 @@ urlpatterns = [
     path('users/<int:pk>/update-info', UserUpdateAPIView.as_view(), name='user-info-update'),
     path('users/<int:pk>/changepassword', UserPasswordUpdateAPIView.as_view(), name='user-change-password'),
     path('articles/<int:article_id>/comments/', comments_for_article, name='comments_for_article'),
+    path('comments', comments, name='comments'),
+    path('comments/<int:id_comment>', comments_by_id, name='comments_by_id'),
     
 ]
