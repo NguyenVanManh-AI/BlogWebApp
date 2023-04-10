@@ -43,7 +43,8 @@ const routes = [
             {path:'comment',name:'UserComments',component:UserComments},
         ]
     },
-    {path: '/dashboard',component: DashboardMain,name:'DashboardMain'}, 
+    // {path: '/dashboard',component: DashboardMain,name:'DashboardMain'}, 
+    {path: '/main',component: DashboardMain,name:'DashboardMain'}, 
 
     {path: '/error',component: CompError,name:'CompError'}, 
     {path: '/:NotFound(.*)*',component: NotFound,name:'NotFound'}
@@ -56,7 +57,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const excludePages = ['/login', '/register', '/dashboard'];
+    const excludePages = ['/login', '/register', '/main'];
     const requiresLogin = !excludePages.includes(to.path);
     const user = localStorage.getItem('user');
     

@@ -1,8 +1,8 @@
 <template>
     <div id="add_article">
       <form  @submit.prevent="add()">
-        <div class="d-flex justify-content-center mt-2" style="font-weight: bold;color: #0076e5;font-size: 20px;"><h1><i class="fa-solid fa-feather"></i> New Article</h1></div>
-        <div style="margin-top: 30px;margin-bottom: 10px;color:gray;text-transform: uppercase;"><i class="fa-solid fa-paragraph"></i> Title</div>
+        <!-- <div class="d-flex justify-content-center mt-2" style="font-weight: bold;color: #0076e5;font-size: 20px;"><h1><i class="fa-solid fa-feather"></i> New Article</h1></div> -->
+        <div style="margin-bottom: 10px;color:gray;text-transform: uppercase;"><i class="fa-solid fa-paragraph"></i> Title</div>
         <div>
             <input v-model="article.title" required placeholder="Title Article" type="text" class="form-control" >
         </div>
@@ -65,7 +65,8 @@ export default {
       };
     },
     mounted(){
-      this.article.id_user = JSON.parse(window.localStorage.getItem('user')).id;
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        if(user) this.article.id_user = JSON.parse(window.localStorage.getItem('user')).id;
     },
     methods:{
       add(){
