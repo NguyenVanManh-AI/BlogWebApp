@@ -50,7 +50,7 @@ export default {
 </script>
 <style scoped>
 #dashboard_left {
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 
 .input-group-text {

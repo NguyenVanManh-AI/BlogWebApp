@@ -1,0 +1,48 @@
+{
+    [ => mảng nhiều bài viết 
+        {
+            article : {  => // bài viết  
+                id
+                id_user
+                title
+                content
+                created_at
+                updated_at
+            },
+            user : { => // thông tin người dùng sở hữu bài viết 
+                id:null,
+                email:null,
+                date_of_birth:null,
+                gender:null,
+                fullname:null,
+                avatar:null,
+            },
+            comment : [ => comment của bài viết đó 
+                {
+                    id 
+                    id_user (id của user comment)
+                    id_article
+                    content
+                    fullname (của user có id_user tương ứng , fullname của user comment)
+                    avatar (path ảnh đại diện của user có id_user tương ứng)
+                },
+                {
+                    id
+                    id_user
+                    id_article
+                    content
+                    fullname (của user có id_user tương ứng)
+                    avatar (path ảnh đại diện của user có id_user tương ứng)
+                },
+                {
+                    id
+                    id_user
+                    id_article
+                    content
+                    fullname (của user có id_user tương ứng)
+                    avatar (path ảnh đại diện của user có id_user tương ứng)
+                }
+            ]
+        }
+    ]
+}
