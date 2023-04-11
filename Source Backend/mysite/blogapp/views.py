@@ -115,14 +115,14 @@ class UserPasswordUpdateAPIView(generics.UpdateAPIView):
         
 @api_view(['GET'])
 def comments_for_article(request, article_id):
-    comments = Comments.objects.filter(id_article=article_id).order_by('created_at')
+    comments = Comments.objects.filter(id_article=article_id).order_by('-id')
     serializer = CommentWithUserInfoSerializer(comments, many=True)
     return Response(serializer.data)
 
 @api_view(['GET', 'POST'])
 def comments(request):
     if request.method == 'GET':
-        comments = Comments.objects.all().order_by('created_at')
+        comments = Comments.objects.all().order_by('-id')
         serializer = CommentWithUserInfoSerializer(comments, many=True)
         return Response(serializer.data)
 
@@ -168,7 +168,7 @@ class CustomPagination2(PageNumberPagination):
 class ArticleListView(APIView):
     def get(self, request):
         paginator = CustomPagination()
-        articles = Article.objects.all().order_by('created_at')
+        articles = Article.objects.all().order_by('-id')
         paginated_articles = paginator.paginate_queryset(articles, request)
         article_serializer = ArticleSerializer(paginated_articles, many=True)
 
@@ -176,7 +176,7 @@ class ArticleListView(APIView):
         for article_data in article_serializer.data:
             user = User.objects.get(id=article_data['id_user'])
             user_serializer = UserSerializer(user)
-            comments = Comments.objects.filter(id_article=article_data['id']).order_by('created_at')
+            comments = Comments.objects.filter(id_article=article_data['id']).order_by('-id')
             comment_serializer = CommentWithUserInfoSerializer(comments, many=True)
             data.append({'article': article_data, 'user': user_serializer.data, 'comment': comment_serializer.data})
 
@@ -185,7 +185,7 @@ class ArticleListView(APIView):
 class SingleArticleListView(APIView):
     def get(self, request, id_article):
         paginator = CustomPagination()
-        articles = Article.objects.filter(id=id_article).order_by('created_at')
+        articles = Article.objects.filter(id=id_article).order_by('-id')
         paginated_articles = paginator.paginate_queryset(articles, request)
         article_serializer = ArticleSerializer(paginated_articles, many=True)
 
@@ -193,7 +193,7 @@ class SingleArticleListView(APIView):
         for article_data in article_serializer.data:
             user = User.objects.get(id=article_data['id_user'])
             user_serializer = UserSerializer(user)
-            comments = Comments.objects.filter(id_article=article_data['id']).order_by('created_at')
+            comments = Comments.objects.filter(id_article=article_data['id']).order_by('-id')
             comment_serializer = CommentWithUserInfoSerializer(comments, many=True)
             data.append({'article': article_data, 'user': user_serializer.data, 'comment': comment_serializer.data})
 
@@ -203,7 +203,7 @@ class SingleArticleListView(APIView):
 class UserArticleListView(APIView):
     def get(self, request, user_id):
         paginator = CustomPagination2()
-        articles = Article.objects.filter(id_user=user_id).order_by('created_at')
+        articles = Article.objects.filter(id_user=user_id).order_by('-id')
         paginated_articles = paginator.paginate_queryset(articles, request)
         article_serializer = ArticleSerializer(paginated_articles, many=True)
 
@@ -211,7 +211,7 @@ class UserArticleListView(APIView):
         for article_data in article_serializer.data:
             user = User.objects.get(id=article_data['id_user'])
             user_serializer = UserSerializer(user)
-            comments = Comments.objects.filter(id_article=article_data['id']).order_by('created_at')
+            comments = Comments.objects.filter(id_article=article_data['id']).order_by('-id')
             comment_serializer = CommentWithUserInfoSerializer(comments, many=True)
             data.append({'article': article_data, 'user': user_serializer.data, 'comment': comment_serializer.data})
 
