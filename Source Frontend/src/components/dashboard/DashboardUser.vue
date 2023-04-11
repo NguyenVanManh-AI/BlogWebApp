@@ -45,6 +45,7 @@
             <div class="infor_right">
               <button class="btn_setting" @click="showSetting(index)"><i class="fa-solid fa-ellipsis" ></i></button>
               <div class="show_setting" v-if="show_setting[index]">
+                <li @click="goto_edit(article.article.id)"><span class="setting_icon"><i class="fa-solid fa-pen-nib"></i></span> <span>Edit Article</span></li>
                 <li data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Article</span></li>
                 <li><span class="setting_icon"><i class="fa-solid fa-bookmark"></i></span> <span>Save Articlee</span></li>
                 <li><span class="setting_icon"><i class="fa-solid fa-user-xmark"></i></span> <span>Unfollow</span></li>
@@ -101,7 +102,7 @@
         <div class="modal-dialog fix_width_modal" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;color: #0076e5;font-size: 20px;"><i class="fa-solid fa-feather"></i> Details Article</h5>
+              <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;color: #0076e5;font-size: 20px;"><i class="fa-solid fa-cannabis"></i> Details Article</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -399,8 +400,12 @@ div.show_setting {
   right: 0px;
   background-color: white;
   width: max-content;
-  border: 1px solid silver;
+  /* border: 1px solid silver; */
   border-radius: 10px;
+  /* box-shadow: #c7e2fc 0px 7px 29px 0px; */
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  /* box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px; */
 }
 div.show_setting li {
   margin: 3px ;
@@ -545,6 +550,7 @@ div.show_setting li .setting_icon{
 /* ModalArticle */
 .fix_width_modal {
   width: 60% !important;
+  max-width: 60% !important;
 }
 
 
