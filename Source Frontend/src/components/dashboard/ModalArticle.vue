@@ -11,14 +11,14 @@
                         <p class="infor_fullname">{{ full_article.user.fullname }}</p>
                         <p class="infor_created">{{ process_date(full_article.article.created_at) }}</p>
                     </div>
-                    <div class="infor_right">
-                    <button class="btn_setting" @click="show_setting = !show_setting"><i class="fa-solid fa-ellipsis" ></i></button>
+                    <div class="infor_right" v-if="user">
+                      <button class="btn_setting" @click="show_setting = !show_setting"><i class="fa-solid fa-ellipsis" ></i></button>
                         <div class="show_setting" v-if="show_setting">
-                            <li @click="goto_edit(full_article.article.id)"><span class="setting_icon"><i class="fa-solid fa-pen-nib"></i></span> <span>Edit Article</span></li>
-                            <li data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Article</span></li>
-                            <li><span class="setting_icon"><i class="fa-solid fa-bookmark"></i></span> <span>Save Articlee</span></li>
-                            <li><span class="setting_icon"><i class="fa-solid fa-user-xmark"></i></span> <span>Unfollow</span></li>
-                            <li><span class="setting_icon"><i class="fa-solid fa-flag"></i></span> <span>Report Article</span></li>
+                            <li class="li_edit" v-if="user.id == full_article.article.id_user" @click="editArticle(full_article.article.id)"><span class="setting_icon"><i class="fa-solid fa-pen-nib"></i></span> <span>Edit Article</span></li>
+                            <!-- <li class="li_delete" v-if="user.id == full_article.article.id_user" @click="openModel(full_article.article.id);" data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Article</span></li> -->
+                            <li class="li_save" v-if="user.id != full_article.article.id_user" @click="saveArticle" ><span class="setting_icon"><i class="fa-solid fa-bookmark"></i></span> <span>Save Articlee</span></li>
+                            <li class="li_unfollow" v-if="user.id != full_article.article.id_user" @click="unfollowUser" ><span class="setting_icon"><i class="fa-solid fa-user-xmark"></i></span> <span>Unfollow</span></li>
+                            <li class="li_report" v-if="user.id != full_article.article.id_user" @click="reportArticle" ><span class="setting_icon"><i class="fa-solid fa-flag"></i></span> <span>Report Article</span></li>
                         </div>
                     </div>
                 </div>
@@ -49,10 +49,11 @@
                         </div>
                       </div>
                       <div class="setting_cmt" v-if="user">
-                        <button v-if="user.id == comment.id_user" class="btn_setting_cmt" @click="showSetting(index)"><i class="fa-solid fa-ellipsis" ></i></button>
+                        <button class="btn_setting_cmt" @click="showSetting(index)"><i class="fa-solid fa-ellipsis" ></i></button>
                         <div class="show_setting_cmt" v-if="show_setting_cmt[index]">
-                          <li @click="showEditModal(comment)"><span class="setting_icon"><i class="fa-solid fa-pen-to-square"></i></span> <span>Edit Comment</span></li>
-                          <li @click="deleteComment(index)" data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Comment</span></li>
+                          <li v-if="user.id == comment.id_user" @click="showEditModal(comment)"><span class="setting_icon"><i class="fa-solid fa-pen-to-square"></i></span> <span>Edit Comment</span></li>
+                          <li v-if="user.id == comment.id_user" @click="deleteComment(index)" data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Comment</span></li>
+                          <li v-if="user.id != comment.id_user" @click="reportComment()" data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-flag"></i></span> <span>Report Comment</span></li>
                         </div>
                       </div>
                     </div>
@@ -91,14 +92,14 @@
       <div >
     </div>
     <br>
-    <Notification></Notification>
+    <!-- <Notification></Notification> -->
     </div>
 </template>
 <script>
 
 import BaseRequest from '../../restful/user/core/BaseRequest';
 import useEventBus from '../../composables/useEventBus';
-import Notification from './../Notification';
+// import Notification from './../Notification';
 import config from '../../config.js';
 // import Paginate from 'vuejs-paginate-next';
 
@@ -108,7 +109,7 @@ import config from '../../config.js';
 export default {
     name : "ModalArticle",
     components: {
-        Notification
+        // Notification
     },
     data(){
         return{
@@ -155,33 +156,33 @@ export default {
     created(){
     },
     mounted(){
-        // this.full_article = this.article; 
-        // console.log(this.full_article);
-        // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
+      // this.full_article = this.article; 
+      // console.log(this.full_article);
+      // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
 
-        this.user = JSON.parse(window.localStorage.getItem('user'));
-        if(this.user){
-          if(this.user.avatar) this.user.avatar = config.API_URL + this.user.avatar ;
-        }
+      this.user = JSON.parse(window.localStorage.getItem('user'));
+      if(this.user){
+        if(this.user.avatar) this.user.avatar = config.API_URL + this.user.avatar ;
+      }
 
-        document.addEventListener('click', this.handleOutsideClick);
-        const { onEvent } = useEventBus()
-        onEvent('ShowArticle',(id_article)=>{
-          BaseRequest.get('articles/'+id_article)
-          .then( data => {
-            this.full_article = data.results[0];
-            // this.list_comment = article.comment;
-            // this.count_cmt = this.list_comment.length;
-            this.count_cmt = this.full_article.comment.length;
-            this.show_setting_cmt = new Array(this.count_cmt).fill(false);
+      document.addEventListener('click', this.handleOutsideClick);
+      const { onEvent } = useEventBus()
+      onEvent('ShowArticle',(id_article)=>{
+        BaseRequest.get('articles/'+id_article)
+        .then( data => {
+          this.full_article = data.results[0];
+          // this.list_comment = article.comment;
+          // this.count_cmt = this.list_comment.length;
+          this.count_cmt = this.full_article.comment.length;
+          this.show_setting_cmt = new Array(this.count_cmt).fill(false);
 
-            // add Comment 
-            this.addComment.id_user = this.user.id;
-            this.addComment.id_article = this.full_article.article.id;
-          })
-          .catch( () => {
-          })
+          // add Comment 
+          this.addComment.id_user = this.user.id;
+          this.addComment.id_article = this.full_article.article.id;
         })
+        .catch( () => {
+        })
+      })
     },
     beforeUnmount() {
         // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
@@ -191,79 +192,140 @@ export default {
         // this.show_setting_cmt = new Array(this.count_cmt).fill(false);
     },
     methods:{
-        // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
-        handleOutsideClick(event) {
-            if (!event.target.closest('button.btn_setting_cmt')) {
-                this.show_setting_cmt = new Array(this.count_cmt).fill(false);
-            }
-
-            if (!event.target.closest('button')) {
-                this.show_setting = false;
-            }
-        },
-        process_url(path){
-            return config.API_URL + path.slice(1);
-        },
-        showSetting(index){
-          if(this.show_setting_cmt[index] == true) this.show_setting_cmt[index] = false;
-          else {
-            this.show_setting_cmt = new Array(this.count_cmt).fill(false);
-            this.show_setting_cmt[index] = true;
+      // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
+      handleOutsideClick(event) {
+          if (!event.target.closest('button.btn_setting_cmt')) {
+              this.show_setting_cmt = new Array(this.count_cmt).fill(false);
           }
-        },
-        process_date(day){
-            const dateString = day;
-            const date = new Date(Date.parse(dateString));
-            const month = date.toLocaleString('default', { month: 'short' });
-            // const formattedDate = `${("0" + date.getDate()).slice(-2)} month, ${date.getFullYear()}`;
-            const formattedDate = `${("0" + date.getDate()).slice(-2)} ${month}, ${date.getFullYear()}`;
-            return formattedDate;
-        },
 
+          if (!event.target.closest('button')) {
+              this.show_setting = false;
+          }
+      },
+      process_url(path){
+          return config.API_URL + path.slice(1);
+      },
+      showSetting(index){
+        if(this.show_setting_cmt[index] == true) this.show_setting_cmt[index] = false;
+        else {
+          this.show_setting_cmt = new Array(this.count_cmt).fill(false);
+          this.show_setting_cmt[index] = true;
+        }
+      },
+      process_date(day){
+          const dateString = day;
+          const date = new Date(Date.parse(dateString));
+          const month = date.toLocaleString('default', { month: 'short' });
+          // const formattedDate = `${("0" + date.getDate()).slice(-2)} month, ${date.getFullYear()}`;
+          const formattedDate = `${("0" + date.getDate()).slice(-2)} ${month}, ${date.getFullYear()}`;
+          return formattedDate;
+      },
 
-
-
-        // edit and delete Comment 
-        showEditModal(comment) {
-          this.editingComment = comment;
-          this.showModal = true;
-        },
-        saveComment() {
-          // Save edited comment to the backend
-          // ...
+      // edit and delete Comment 
+      showEditModal(comment) {
+        this.editingComment = comment;
+        this.showModal = true;
+      },
+      saveComment() {
+        BaseRequest.patch('comments/'+this.editingComment.id,this.editingComment)
+        .then( () => {
           this.showModal = false;
           this.editingComment = null;
-        },
-        cancelEdit() {
-          this.showModal = false;
-          this.editingComment = null;
-        },
-        deleteComment(index) {
+          const { emitEvent } = useEventBus();
+          emitEvent('eventSuccess','Edit Comment Success !');
+        })
+        .catch( () => {
+          const { emitEvent } = useEventBus();
+          emitEvent('eventError','Edit Comment Fail !');
+        })
+      },
+      cancelEdit() {
+        this.showModal = false;
+        this.editingComment = null;
+      },
+      deleteComment(index) {
+        BaseRequest.delete('comments/'+this.full_article.comment[index].id)
+        .then( () => {
           this.full_article.comment.splice(index, 1);
-        },
+          const { emitEvent } = useEventBus();
+          emitEvent('eventSuccess','Delete Comment Success !');
+          emitEvent('deleteCmt',this.full_article.article.id);
+        })
+        .catch( () => {
+          const { emitEvent } = useEventBus();
+          emitEvent('eventError','Delete Comment Fail !');
+        })
+      },
 
-        // add Comment 
-        // cho textarea chỉ được tự xuống dòng khi hết dòng, còn lại khi enter trên đó thì submit form như input 
-        handleEnter(event) {
-					if (!event.shiftKey) {
-						event.preventDefault();
-						this.addCmt();
-					}
-				},
+      // add Comment 
+      // cho textarea chỉ được tự xuống dòng khi hết dòng, còn lại khi enter trên đó thì submit form như input 
+      handleEnter(event) {
+        if (!event.shiftKey) {
+          event.preventDefault();
+          this.addCmt();
+        }
+      },
 
-        addCmt(){
-          BaseRequest.post('comments',this.addComment)
+      addCmt(){
+        BaseRequest.post('comments',this.addComment)
+        .then( data => {
+          this.full_article.comment.push(data);
+          const { emitEvent } = useEventBus();
+          this.addComment.content = '';
+          emitEvent('eventSuccess','Comment Success !');
+          emitEvent('addCmt',data);
+        })
+        .catch( () => {
+          const { emitEvent } = useEventBus();
+          emitEvent('eventError','Comment Fail !');
+        })
+      },
+      reportComment(){
+        const { emitEvent } = useEventBus();
+        emitEvent('eventSuccess','Report Comment Success !');
+      },
+
+      editArticle(id){
+        this.$router.push({name:'ArticleEdit',params:{id:id}}); 
+      },
+      openModel(id){
+        this.id_article_delete = id;
+      },
+      deleteArticle(){
+        BaseRequest.delete('articles/'+this.id_article_delete+'/')
+        .then( () => {
+          var close_btn = window.document.getElementById('close_btn');
+          close_btn.click();
+          const { emitEvent } = useEventBus();
+          emitEvent('eventSuccess','Delete Article Success !');
+
+          // không cần reload lại trang 
+          BaseRequest.get('articles?page='+this.pageN)
           .then( data => {
-            this.full_article.comment.push(data);
-            const { emitEvent } = useEventBus();
-            this.addComment.content = '';
-            emitEvent('eventSuccess','Comment Success !');
+            this.articles = data.results;
+            this.quantity = data.count;
           })
           .catch( () => {
-            const { emitEvent } = useEventBus();
-            emitEvent('eventError','Comment Fail !');
           })
-        }
+        })
+        .catch( () => {
+            const { emitEvent } = useEventBus();
+            emitEvent('eventError','Delete Article Fail !');
+        })
+      },
+      saveArticle(){
+        const { emitEvent } = useEventBus();
+        emitEvent('eventSuccess','Save Article Success !');
+      },
+      unfollowUser(){
+        const { emitEvent } = useEventBus();
+        emitEvent('eventSuccess','Unfollow User Success !');
+      },
+      reportArticle(){
+        const { emitEvent } = useEventBus();
+        emitEvent('eventSuccess','Report Article Success!');
+      }
+
     },
     watch:{
 
@@ -353,7 +415,7 @@ div.show_setting li,div.show_setting_cmt li {
   padding: 5px 10px;
 }
 div.show_setting li:hover {
-  color: #F84B2F;
+  /* color: #F84B2F; */
   background-color: #ebebeb;
   border-radius: 10px;
 }
@@ -366,6 +428,12 @@ div.show_setting_cmt li:nth-child(1):hover {
 
 div.show_setting_cmt li:nth-child(2):hover {
   color: #F84B2F;
+  background-color: #ebebeb;
+  border-radius: 10px;
+}
+
+div.show_setting_cmt li:nth-child(1):hover {
+  color: #ff0000;
   background-color: #ebebeb;
   border-radius: 10px;
 }
@@ -440,6 +508,11 @@ div.show_setting li .setting_icon{
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-line-clamp: 2; /* giới hạn số dòng */
+  word-wrap: break-word;
+  cursor: pointer;
+}
+.main_title:hover {
+  color: #0085FF;
 }
 
 .main_center {
@@ -451,6 +524,7 @@ div.show_setting li .setting_icon{
   max-height: 500px;
   overflow: hidden;
   overflow-y: scroll;
+  word-wrap: break-word;
 }
 
 
@@ -459,9 +533,10 @@ div.show_setting li .setting_icon{
   margin-top: 10px;
   padding: 10px 0px;
   /* border: 1px solid silver; */
-  border-top: 1px solid silver;
+  border-top: 1px solid rgb(219, 219, 219);
   margin-top: 10px;
   max-height: 500px;
+  min-height: 180px;
   overflow: hidden;
   overflow-y: scroll;
 }
@@ -559,10 +634,29 @@ div.show_setting li .setting_icon{
 
 /* Send Comment */
 .input_content {
-  width: 50vw;
+  width: 53vw;
   margin-left: 6px;
   display: block;
   border-radius: 10px;
+}
+div.show_setting li:hover {
+  background-color: #ebebeb;
+  border-radius: 10px;
+}
+.li_edit:hover {
+  color: #0085FF;
+}
+.li_delete:hover {
+  color: #F84B2F;
+}
+.li_save:hover {
+  color: #0dcc23;
+}
+.li_unfollow:hover {
+  color: #bac100;
+}
+.li_report:hover {
+  color: #ff0000;
 }
 
 

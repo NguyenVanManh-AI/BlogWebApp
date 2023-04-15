@@ -1,13 +1,23 @@
 <template>
   <div>
-    <div><router-view></router-view></div>
+    <div>
+      <router-view></router-view>
+      <Notification></Notification>
+    </div>
   </div>
 </template>
 
 <script>
 
+import Notification from './components/Notification';
+// chỉ cần để một lần Notification tại file App.vue là được , những component con khác chỉ việc gửi đi sự kiện là tự đọng có 
+// Mặc khác nếu để Notification tại file App thì z-index của nó luôn nằm trên các cái khác mà không cần chỉnh 
+// còn nếu chỉnh thì mình vào component Notification để chỉnh thôi cũng được 
 export default {
   name: 'App',
+  components:{
+    Notification,
+  }
   // mounted() {
   //   const shortcutIcon = document.querySelector('link[rel="shortcut icon"]');
   //   if (shortcutIcon) {

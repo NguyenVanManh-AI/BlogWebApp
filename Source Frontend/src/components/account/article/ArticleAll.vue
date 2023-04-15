@@ -34,7 +34,8 @@
         </paginate>
     </div>
     </div>
-      <!-- Model Delete Admin -->
+
+    <!-- Model Delete Admin -->
     <div style="background-color: #3d3d3d99;" class="modal fade" id="exampleModalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document" >
           <div class="modal-content">
@@ -57,20 +58,20 @@
           </div>
       </div>
     </div>
-    <Notification></Notification>
+    <!-- <Notification></Notification> -->
   </div>
 </template>
 <script>
 
 import BaseRequest from '../../../restful/user/core/BaseRequest';
 import useEventBus from '../../../composables/useEventBus'
-import Notification from '../../Notification'
+// import Notification from '../../Notification'
 import Paginate from 'vuejs-paginate-next';
 
 export default {
   name : "ArticleAll",
   components: {
-    Notification,
+    // Notification,
     paginate: Paginate,
   },
   data(){

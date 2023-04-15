@@ -7,18 +7,18 @@
                 <button @click="editArticle" type="submit" class="mt-4 btn-pers" id="login_button" ><i class="fa-solid fa-pen-to-square"></i> Edit</button>
             </div>
         </div>
-      <Notification></Notification>
+      <!-- <Notification></Notification> -->
     </div>
 </template>
 <script>
 
 import BaseRequest from '../../../restful/user/core/BaseRequest';
 import useEventBus from '../../../composables/useEventBus'
-import Notification from '../../Notification'
+// import Notification from '../../Notification'
 export default {
     name : "ArticleDetail",
     components: {
-      Notification
+      // Notification
     },
     data(){
         return{

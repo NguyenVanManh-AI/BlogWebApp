@@ -22,18 +22,18 @@
             </div>
         </div>
       </form>
-    <Notification></Notification>
+    <!-- <Notification></Notification> -->
     </div>
 </template>
 <script>
 import BaseRequest from '../../../restful/user/core/BaseRequest';
 import useEventBus from '../../../composables/useEventBus'
-import Notification from '../../Notification'
+// import Notification from '../../Notification'
 import { reactive } from "vue";
 export default {
     name : "ArticleEdit",
     components: {
-        Notification
+        // Notification
     },
     data(){
         return{
