@@ -37,4 +37,7 @@ export default {
 }
 </script>
 <style scoped>
+#user {
+    background-color: #F2F4F6;
+}
 </style>

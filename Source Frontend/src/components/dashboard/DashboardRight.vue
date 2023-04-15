@@ -70,7 +70,8 @@ export default {
 </script>
 <style scoped>
 #dashboard_right {
-    background-color: transparent;
+    background-color: #F2F4F6;
+    height: 100vh;
 }
 #account img {
     cursor: pointer;

@@ -51,6 +51,8 @@ export default {
 <style scoped>
 #dashboard_left {
     /* border: 1px solid red; */
+    height: 100vh;
+    background-color: #F2F4F6;
 }
 
 .input-group-text {
