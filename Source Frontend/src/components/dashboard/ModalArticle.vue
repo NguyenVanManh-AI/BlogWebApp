@@ -1,20 +1,20 @@
 <template>
-    <div id="modal_article" v-if="article">
+    <div id="modal_article" v-if="full_article">
         <div class="big_article">
             <div class="header_article">
                 <div class="avatar_article">
-                    <img :src="process_url(article.user.avatar)" alt="Avatar" v-if="article.user.avatar != null" />
-                    <img src='../../assets/avatar.png' alt="Avatar" v-if="article.user.avatar == null"> 
+                    <img :src="process_url(full_article.user.avatar)" alt="Avatar" v-if="full_article.user.avatar != null" />
+                    <img src='../../assets/avatar.png' alt="Avatar" v-if="full_article.user.avatar == null"> 
                 </div>
                 <div class="infor_article">
                     <div class="infor_left">
-                        <p class="infor_fullname">{{ article.user.fullname }}</p>
-                        <p class="infor_created">{{ process_date(article.article.created_at) }}</p>
+                        <p class="infor_fullname">{{ full_article.user.fullname }}</p>
+                        <p class="infor_created">{{ process_date(full_article.article.created_at) }}</p>
                     </div>
                     <div class="infor_right">
                     <button class="btn_setting" @click="show_setting = !show_setting"><i class="fa-solid fa-ellipsis" ></i></button>
                         <div class="show_setting" v-if="show_setting">
-                            <li @click="goto_edit(article.article.id)"><span class="setting_icon"><i class="fa-solid fa-pen-nib"></i></span> <span>Edit Article</span></li>
+                            <li @click="goto_edit(full_article.article.id)"><span class="setting_icon"><i class="fa-solid fa-pen-nib"></i></span> <span>Edit Article</span></li>
                             <li data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Article</span></li>
                             <li><span class="setting_icon"><i class="fa-solid fa-bookmark"></i></span> <span>Save Articlee</span></li>
                             <li><span class="setting_icon"><i class="fa-solid fa-user-xmark"></i></span> <span>Unfollow</span></li>
@@ -25,91 +25,79 @@
             </div>
             <div class="content_main_article">
                 <div @click="get_article_detail(article)" class="main_title" data-toggle="modal" data-target="#modalArticleDetails" >
-                    <i class="fa-solid fa-play"></i> {{ article.article.title }}
+                    <i class="fa-solid fa-play"></i> {{ full_article.article.title }}
                 </div>
                 <div class="main_center">
                     <i class="fa-solid fa-blog"></i>
                 </div>
                 <div class="main_content" >
-                    <div v-html="article.article.content"></div>
+                    <div v-html="full_article.article.content"></div>
                 </div>
             </div>
             <div id="list_comment">
-                <div class="comment_article" v-for="(comment,index) in article.comment" :key="index">
+                <div class="comment_article" v-for="(comment,index) in full_article.comment" :key="comment.di">
                     <div class="avatar_comment">
-                        <img :src="process_url(article.user.avatar)" alt="Avatar" v-if="article.user.avatar != null" />
-                        <img src='../../assets/avatar.png' alt="Avatar" v-if="article.user.avatar == null"> 
+                        <img :src="process_url(comment.avatar)" alt="Avatar" v-if="comment.avatar != null" />
+                        <img src='../../assets/avatar.png' alt="Avatar" v-if="comment.avatar == null"> 
                     </div>
-                    <div class="infor_comment">
+                    <div class="main_infor_comment" v-if="!editingComment || editingComment.id !== comment.id">
+                      <div class="infor_comment">
                         <div class="infor_left">
-                            <!-- {{ article.user.id }} -->
-                            <!-- {{ comment.id_user }} -->
-                            <p class="author" v-if="article.user.id == comment.id_user"><i class="fa-solid fa-at"></i> Author</p>
-                            <!-- <p class="infor_fullname_comment">{{ comment.fullname }}</p> -->
-                            <p class="infor_fullname_comment">Nguyen Van Manh</p>
-                            <p class="infor_created_comment">{{ comment.content }}</p>
+                            <p class="author" v-if="full_article.user.id == comment.id_user"><i class="fa-solid fa-at"></i> Author</p>
+                            <p class="infor_fullname_comment">{{ comment.fullname }}</p>
+                            <p class="comment_content infor_created_comment">{{ comment.content }}</p>
                         </div>
+                      </div>
+                      <div class="setting_cmt">
+                        <button class="btn_setting_cmt" @click="showSetting(index)"><i class="fa-solid fa-ellipsis" ></i></button>
+                        <div class="show_setting_cmt" v-if="show_setting_cmt[index]">
+                          <li @click="showEditModal(comment)"><span class="setting_icon"><i class="fa-solid fa-pen-to-square"></i></span> <span>Edit Comment</span></li>
+                          <li @click="deleteComment(index)" data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Comment</span></li>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <div class="infor_comment">
+                        <div class="infor_left">
+                            <p class="author" v-if="full_article.user.id == comment.id_user"><i class="fa-solid fa-at"></i> Author</p>
+                            <p class="infor_fullname_comment">{{ comment.fullname }}</p>
+                            <textarea class="edit_content" v-model="editingComment.content"></textarea>
+                            <button class="btn_save" @click="saveComment()"><i class="fa-solid fa-check"></i> Save</button>
+                            <button class="btn_cancel" @click="cancelEdit()"><i class="fa-solid fa-xmark"></i> Cancel</button>
+                          </div>
+                      </div>
                     </div>
                 </div>
-
-                <!-- <div v-for="(comment,index) in article.comment" :key="index">
-                    {{ comment.id }}
-                    {{ comment.id_article }}
-                    {{ comment.id_user }}
-                    {{ comment.content }}
-                </div> -->
             </div>
-
             <div id="add_comment">
-                <div class="header_article">
+                <div class="header_comment ">
                     <div class="avatar_article">
-                        <img :src="process_url(article.user.avatar)" alt="Avatar" v-if="article.user.avatar != null" />
-                        <img src='../../assets/avatar.png' alt="Avatar" v-if="article.user.avatar == null"> 
+                        <img :src="user.avatar" alt="Avatar" v-if="user.avatar != null" />
+                        <img src='../../assets/avatar.png' alt="Avatar" v-if="user.avatar == null"> 
                     </div>
                     <div class="send_content_comment">
                         <div >
                             <div class="input-group">
-                                <input style="background-color: #F0F2F5;" type="text" class="form-control" id="inlineFormInputGroup" placeholder="Write a comment...">
-                                <div class="input-group-prepend"><div class="input-group-text"><i class="fa-solid fa-paper-plane"></i></div></div>
+                              <form @submit.prevent="addCmt">
+                                <textarea @keydown.enter.prevent="handleEnter" style="background-color: #F0F2F5;" v-model="addComment.content" type="text" class="form-control input_content" id="inlineFormInputGroup" placeholder="Write a comment..."></textarea>
+                                <button type="submit" class="input-group-prepend" ></button>
+                              </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
-
-
-
-
-                <div >
-          <!-- <p> <br> article.article.id : {{ article.article.id }} </p> -->
-          <!-- <p> <br> article.article.id_user : {{ article.article.id_user }} </p> -->
-        </div>
-        <br>
-        <!-- <div >
-          {{ article.user.id }}
-          {{ article.user.fullname }}
-          {{ article.user.avatar }}
-        </div> -->
-        <!-- <div v-for="(comment,index) in article.comment" :key="index">
-            {{ comment.id }}
-            {{ comment.id_article }}
-            {{ comment.id_user }}
-            {{ comment.content }}
-        </div> -->
-        <!-- <br>
-        <br>
-        <br>
-        <br> -->
-        <Notification></Notification>
+      <div >
+    </div>
+    <br>
+    <Notification></Notification>
     </div>
 </template>
 <script>
 
-// import BaseRequest from '../../restful/user/core/BaseRequest';
-// import useEventBus from '../../composables/useEventBus';
+import BaseRequest from '../../restful/user/core/BaseRequest';
+import useEventBus from '../../composables/useEventBus';
 import Notification from './../Notification';
 import config from '../../config.js';
 // import Paginate from 'vuejs-paginate-next';
@@ -125,30 +113,103 @@ export default {
     data(){
         return{
             show_setting:false,
+            show_setting_cmt:[],
+            count_cmt:null,
+            user:{
+              id:null,
+              email:null,
+              date_of_birth:null,
+              gender:null,
+              fullname:null,
+              avatar:null,
+              access_token:null,
+            },
+            full_article:{
+              user:{
+                id:null,
+                fullname:null,
+                avatar:null
+              },
+              article:{
+                id:null,
+                title:null,
+                content:null,
+                created_at:null,
+                updated_at:null
+              },
+              comment:[]
+            },
+            showModal: false,
+            editingComment: null,
+            addComment:{
+              id_user:null,
+              id_article:null,
+              content:''
+            },
         }
     },
-    props: ['article'],
+    // props: ['full_article'],
+    setup() {
+      // setup() receives props as the first argument.
+    },
     created(){
-
     },
     mounted(){
-        console.log(this.article);
+        // this.full_article = this.article; 
+        // console.log(this.full_article);
         // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
+
+        this.user = JSON.parse(window.localStorage.getItem('user'));
+        if(this.user){
+          if(this.user.avatar) this.user.avatar = config.API_URL + this.user.avatar ;
+        }
+
         document.addEventListener('click', this.handleOutsideClick);
+        const { onEvent } = useEventBus()
+        onEvent('ShowArticle',(id_article)=>{
+          BaseRequest.get('articles/'+id_article)
+          .then( data => {
+            this.full_article = data.results[0];
+            // this.list_comment = article.comment;
+            // this.count_cmt = this.list_comment.length;
+            this.count_cmt = this.full_article.comment.length;
+            this.show_setting_cmt = new Array(this.count_cmt).fill(false);
+
+            // add Comment 
+            this.addComment.id_user = this.user.id;
+            this.addComment.id_article = this.full_article.article.id;
+          })
+          .catch( () => {
+          })
+        })
     },
     beforeUnmount() {
         // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
         document.removeEventListener('click', this.handleOutsideClick);
+        // this.count_cmt = this.full_article.comment.length;
+        // console.log(this.count_cmt);
+        // this.show_setting_cmt = new Array(this.count_cmt).fill(false);
     },
     methods:{
         // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
         handleOutsideClick(event) {
+            if (!event.target.closest('button.btn_setting_cmt')) {
+                this.show_setting_cmt = new Array(this.count_cmt).fill(false);
+            }
+
             if (!event.target.closest('button')) {
                 this.show_setting = false;
             }
         },
         process_url(path){
             return config.API_URL + path.slice(1);
+        },
+        showSetting(index){
+          if(this.show_setting_cmt[index] == true) this.show_setting_cmt[index] = false;
+          else {
+            this.show_setting_cmt = new Array(this.count_cmt).fill(false);
+            this.show_setting_cmt[index] = true;
+          }
         },
         process_date(day){
             const dateString = day;
@@ -158,6 +219,51 @@ export default {
             const formattedDate = `${("0" + date.getDate()).slice(-2)} ${month}, ${date.getFullYear()}`;
             return formattedDate;
         },
+
+
+
+
+        // edit and delete Comment 
+        showEditModal(comment) {
+          this.editingComment = comment;
+          this.showModal = true;
+        },
+        saveComment() {
+          // Save edited comment to the backend
+          // ...
+          this.showModal = false;
+          this.editingComment = null;
+        },
+        cancelEdit() {
+          this.showModal = false;
+          this.editingComment = null;
+        },
+        deleteComment(index) {
+          this.full_article.comment.splice(index, 1);
+        },
+
+        // add Comment 
+        // cho textarea chỉ được tự xuống dòng khi hết dòng, còn lại khi enter trên đó thì submit form như input 
+        handleEnter(event) {
+					if (!event.shiftKey) {
+						event.preventDefault();
+						this.addCmt();
+					}
+				},
+
+        addCmt(){
+          BaseRequest.post('comments',this.addComment)
+          .then( data => {
+            this.full_article.comment.push(data);
+            const { emitEvent } = useEventBus();
+            this.addComment.content = '';
+            emitEvent('eventSuccess','Comment Success !');
+          })
+          .catch( () => {
+            const { emitEvent } = useEventBus();
+            emitEvent('eventError','Comment Fail !');
+          })
+        }
     },
     watch:{
 
@@ -179,9 +285,14 @@ export default {
   padding: 10px;
 }
 .header_article {
-  border-bottom: 2px solid rgb(219, 219, 219);
+  border-bottom: 1px solid rgb(219, 219, 219);
   display: flex;
   padding-bottom: 10px;
+}
+.header_comment {
+  border-top: 1px solid rgb(219, 219, 219);
+  display: flex;
+  padding-top: 20px;
 }
 .avatar_article img {
   cursor: pointer;
@@ -201,7 +312,7 @@ export default {
   transition: all 0.5s ease;
   justify-content: space-between;
 }
-.infor_right {
+.infor_right,.setting_cmt {
   position: relative;
 }
 div.show_setting {
@@ -210,6 +321,7 @@ div.show_setting {
   top: 36px;
   right: 0px;
   background-color: white;
+  z-index: 3;
   width: max-content;
   /* border: 1px solid silver; */
   border-radius: 10px;
@@ -218,7 +330,22 @@ div.show_setting {
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
   /* box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px; */
 }
-div.show_setting li {
+div.show_setting_cmt {
+  padding: 10px;
+  position: absolute;
+  top: 36px;
+  right: 0px;
+  background-color: white;
+  z-index: 3;
+  width: 200px;
+  /* border: 1px solid silver; */
+  border-radius: 10px;
+  /* box-shadow: #c7e2fc 0px 7px 29px 0px; */
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  /* box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px; */
+}
+div.show_setting li,div.show_setting_cmt li {
   margin: 3px ;
   display: flex;
   align-items: center;
@@ -230,6 +357,27 @@ div.show_setting li:hover {
   background-color: #ebebeb;
   border-radius: 10px;
 }
+
+div.show_setting_cmt li:nth-child(1):hover {
+  color:#0085FF;
+  background-color: #ebebeb;
+  border-radius: 10px;
+}
+
+div.show_setting_cmt li:nth-child(2):hover {
+  color: #F84B2F;
+  background-color: #ebebeb;
+  border-radius: 10px;
+}
+
+div.show_setting_cmt li .setting_icon{
+  display: inline-block;
+  width: 10%;
+  align-items: center;
+  text-align: center;
+  margin-right: 16px;
+}
+
 div.show_setting li .setting_icon{
   display: inline-block;
   width: 10%;
@@ -253,7 +401,7 @@ div.show_setting li .setting_icon{
   /* text-decoration: underline; */
   color: #0085FF;
 }
-.btn_setting {
+.btn_setting,.btn_setting_cmt {
   border-radius: 20px;
   padding: 6px;
   width: 30px;
@@ -265,11 +413,15 @@ div.show_setting li .setting_icon{
 .btn_setting:hover {
   background-color: #e0e0e0;
 }
+.btn_setting_cmt:hover {
+  background-color: #e0e0e0;
+}
+
 
 
 /* content_main_article */
 .content_main_article {
-
+  padding-bottom: 10px;
 }
 
 .main_title {
@@ -304,9 +456,14 @@ div.show_setting li .setting_icon{
 
 /* list comment */
 #list_comment {
-    margin-top: 10px;
-    padding: 10px 0px;
-    /* border: 1px solid silver; */
+  margin-top: 10px;
+  padding: 10px 0px;
+  /* border: 1px solid silver; */
+  border-top: 1px solid silver;
+  margin-top: 10px;
+  max-height: 500px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
 
@@ -317,6 +474,9 @@ div.show_setting li .setting_icon{
   padding-bottom: 10px;
 }
 
+.avatar_comment {
+  min-width: fit-content;
+}
 .avatar_comment img {
   cursor: pointer;
   max-width: 120% !important;
@@ -325,6 +485,12 @@ div.show_setting li .setting_icon{
   object-fit:cover;
   border-radius: 20px;
 }
+
+
+.main_infor_comment {
+  display: flex;
+}
+
 .infor_comment {
   display: flex;
   align-items: center;
@@ -355,8 +521,49 @@ div.show_setting li .setting_icon{
     color: #616161;
 }
 
-/* Send Comment */
+/* Edit or Delete Comment */
+.setting_cmt {
 
+}
+
+.edit_content {
+  border-radius: 5px;
+  width: 45vw;
+  display: block;
+  height: 15vh;
+}
+
+.btn_save,.btn_cancel {
+  padding: 0px 5px;
+  border: 1px solid silver;
+  border-radius: 5px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-right: 6px;
+}
+.btn_save:hover {
+  /* background-color: rgb(237, 237, 237); */
+  /* color: #009717; */
+  background-color: #009717;
+  color: white;
+}
+.btn_cancel:hover{
+  /* background-color: rgb(237, 237, 237); */
+  color: white;
+  background-color:#F84B2F;
+}
+.comment_content {
+  max-width: 50vw;
+  word-wrap: break-word;
+}
+
+/* Send Comment */
+.input_content {
+  width: 50vw;
+  margin-left: 6px;
+  display: block;
+  border-radius: 10px;
+}
 
 
 </style>

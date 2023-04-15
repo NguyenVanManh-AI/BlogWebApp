@@ -67,8 +67,7 @@
         </div>
         <div class="footer_article">
           <div @click="get_article_detail(article)" class="footer_number_comment" data-toggle="modal" data-target="#modalArticleDetails" >
-              <!-- {{ article.comment.length }} -->
-            9999 Comments
+              {{ article.comment.length }} Comments
           </div>
           <div class="footer_comment_article">
             <div @click="get_article_detail(article)" data-toggle="modal" data-target="#modalArticleDetails" ><span><i class="fa-regular fa-message"></i></span> <span>Comments</span></div>
@@ -101,19 +100,20 @@
       <div v-if="user" class="modal fade" id="modalArticleDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog fix_width_modal" role="document">
           <div class="modal-content">
-            <div class="modal-header">
+            <!-- <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;color: #0076e5;font-size: 20px;"><i class="fa-solid fa-cannabis"></i> Details Article</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-            </div>
+            </div> -->
             <div class="modal-body">
-              <ModalArticle v-bind:article="this.article_detail"></ModalArticle>
+              <!-- <ModalArticle v-bind:full_article="this.article_detail"></ModalArticle> -->
+              <ModalArticle :full_article="this.article_detail"></ModalArticle>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <!-- <div class="modal-footer"> -->
+              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
               <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-            </div>
+            <!-- </div> -->
           </div>
         </div>
       </div>
@@ -121,23 +121,11 @@
 
 
 
-        <div v-for="comment in comments" :key="comment.id">
-        <div v-if="!editingComment || editingComment.id !== comment.id">
-            <p>{{ comment.content }}</p>
-            <button @click="showEditModal(comment)">Edit</button>
-            <button @click="deleteComment(comment)">Delete</button>
-        </div>
-        <div v-else>
-            <h3>Edit comment</h3>
-            <textarea v-model="editingComment.content"></textarea>
-            <button @click="saveComment()">Save</button>
-            <button @click="cancelEdit()">Cancel</button>
-        </div>
-        </div>
+
 
         <div id="divpaginate">
           <paginate class="pag" id="nvm"
-              :page-count="Math.ceil(this.quantity/6)"
+              :page-count="Math.ceil(this.quantity/10)"
               :page-range="3"
               :margin-pages="2"
               :click-handler="clickCallback"
@@ -174,31 +162,24 @@ export default {
       ModalArticle
     },
     data(){
-        return{
-          user:{
-            id:null,
-            email:null,
-            date_of_birth:null,
-            gender:null,
-            fullname:null,
-            avatar:null,
-            access_token:null,
-          },
-          articles:null,
-          pageN:1,
-          quantity:null,
-          article_detail:null,
-          // length_articles:null,
-          // show_setting: new Array(this.length_articles).fill(false),
-          show_setting: new Array(10).fill(false), // vì mỗi lần mình lấy ra 10 bài viết nên k cần tính nữa, thiếu thì ít hơn 10 bài viết thôi 
-          //  đôi khi chỗ này có thể để 9999 thay vì 10 => lấy bao nhiêu bài viết cũng được , miễn <= 9999 là nó hoạt động 
-          comments: [
-            { id: 1, content: "Comment 1" },
-            { id: 2, content: "Comment 2" },
-            { id: 3, content: "Comment 3" },
-          ],
-      showModal: false,
-      editingComment: null,
+      return{
+        user:{
+          id:null,
+          email:null,
+          date_of_birth:null,
+          gender:null,
+          fullname:null,
+          avatar:null,
+          access_token:null,
+        },
+        articles:null,
+        pageN:1,
+        quantity:null,
+        article_detail:null,
+        // length_articles:null,
+        // show_setting: new Array(this.length_articles).fill(false),
+        show_setting: new Array(10).fill(false), // vì mỗi lần mình lấy ra 10 bài viết nên k cần tính nữa, thiếu thì ít hơn 10 bài viết thôi 
+        //  đôi khi chỗ này có thể để 9999 thay vì 10 => lấy bao nhiêu bài viết cũng được , miễn <= 9999 là nó hoạt động 
         }
     },
     created(){
@@ -209,7 +190,7 @@ export default {
       if(this.user){
         if(this.user.avatar) this.user.avatar = config.API_URL + this.user.avatar ;
       }
-      BaseRequest.get('articles')
+      BaseRequest.get('articles?page=1')
       .then( data => {
         this.articles = data.results;
         // this.length_articles = Object.keys(this.article).length;
@@ -224,11 +205,26 @@ export default {
 
       // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
       document.addEventListener('click', this.handleOutsideClick);
-    
+
+      // Reload the article
+      const { onEvent } = useEventBus()
+      onEvent('ReloadArticle',(val)=>{
+        console.log(val);
+        BaseRequest.get('articles?page='+this.pageN)
+        .then( data => {
+          this.articles = data.results;
+          this.quantity = data.count;
+          const { emitEvent } = useEventBus();
+          emitEvent('eventSuccess','Get All Article Success !');
+        })
+        .catch( () => {
+          const { emitEvent } = useEventBus();
+          emitEvent('eventError','Get All Article Fail !');
+        })
+      })
     },
     
     beforeUnmount() {
-
       // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
       document.removeEventListener('click', this.handleOutsideClick);
     },
@@ -261,6 +257,20 @@ export default {
           this.show_setting = new Array(10).fill(false);
         }
       },
+      getArticles(pageNum){
+        BaseRequest.get('articles?page='+pageNum)
+        .then( data => {
+          this.articles = data.results;
+          // this.length_articles = Object.keys(this.article).length;
+          this.quantity = data.count;
+          const { emitEvent } = useEventBus();
+          emitEvent('eventSuccess','Get All Article Success !');
+        })
+        .catch( () => {
+          const { emitEvent } = useEventBus();
+          emitEvent('eventError','Get All Article Fail !');
+        })
+      },
 
       clickCallback:function(pageNum){
         this.pageN = pageNum;
@@ -269,28 +279,12 @@ export default {
       get_article_detail(article){
         this.article_detail = article;
         // console.log(this.article_detail);
+        const { emitEvent } = useEventBus();
+        emitEvent('ShowArticle',article.article.id);
       },
 
 
-      showEditModal(comment) {
-        this.editingComment = comment;
-        this.showModal = true;
-      },
-      saveComment() {
-        // Save edited comment to the backend
-        // ...
-        this.showModal = false;
-        this.editingComment = null;
-      },
-      cancelEdit() {
-        this.showModal = false;
-        this.editingComment = null;
-      },
-      deleteComment(comment) {
-        // Delete comment from the backend
-        // ...
-        this.comments = this.comments.filter((c) => c.id !== comment.id);
-      },
+
     },
 }
 </script>
@@ -322,8 +316,10 @@ export default {
   overflow: hidden;
   overflow-y: scroll;
   height: 100vh;
-  padding-left: 25px;
-  padding-right: 25px;
+  /* padding-left: 25px;
+  padding-right: 25px; */
+  margin: 0px 25px;
+  margin-left: 15px;
 }
 #post_article {
   display: flex;

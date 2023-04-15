@@ -77,6 +77,36 @@ a {
     background-clip: content-box;
 }
 
+
+/* Ẩn thanh cuộn cho phần tử */
+#dashboard_user::-webkit-scrollbar {
+  display: block !important;
+  width: 12px !important;
+  cursor: pointer !important;
+}
+
+/* Hiển thị thanh cuộn khi hover vào */
+/* #dashboard_user:hover::-webkit-scrollbar {
+  display: block !important;
+  width: 12px !important;
+  cursor: pointer !important;
+} */
+
+/* Thiết lập các thuộc tính cho thanh cuộn */
+#dashboard_user::-webkit-scrollbar-thumb:hover {
+  background-color: #0085FF;
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+#dashboard_user::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
 .max {
   /* height: 526px; */
   height: 495px;

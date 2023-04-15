@@ -78,6 +78,7 @@ export default {
           this.article.title = '';
           this.article.content = '';
           this.state.content = '';
+          emitEvent('ReloadArticle','');
         })
         .catch( () => {
           const { emitEvent } = useEventBus();

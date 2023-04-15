@@ -13,10 +13,10 @@
         <tbody v-for="(article,index) in articles" :key="index">
           <tr class="hover_title">
             <th scope="row"><span>{{ (pageN-1)*6+index+1 }}</span></th>
-            <td style="cursor: pointer;" class="col-12 align-center" @click="viewArticle(article.id)">{{ article.title }}</td>
-            <td><div class="btn_center"><button @click="viewArticle(article.id)"  type="button" class="btn btn-primary"><i class="fa-solid fa-eye"></i></button></div></td>
-            <td><div class="btn_center"><button @click="editArticle(article.id)" type="button" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></button></div></td>
-            <td><div class="btn_center"><button @click="openModel(article.id);"  data-toggle="modal" data-target="#exampleModalDelete" type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></div></td>
+            <td style="cursor: pointer;" class="col-12 align-center" @click="viewArticle(article.article.id)">{{ article.article.title }}</td>
+            <td><div class="btn_center"><button @click="viewArticle(article.article.id)"  type="button" class="btn btn-primary"><i class="fa-solid fa-eye"></i></button></div></td>
+            <td><div class="btn_center"><button @click="editArticle(article.article.id)" type="button" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></button></div></td>
+            <td><div class="btn_center"><button @click="openModel(article.article.id);"  data-toggle="modal" data-target="#exampleModalDelete" type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></div></td>
           </tr>
         </tbody>
       </table>
@@ -88,7 +88,8 @@ export default {
   mounted(){
     this.id_user = JSON.parse(window.localStorage.getItem('user')).id;
 
-    BaseRequest.get('articles/?page=1&id_user='+this.id_user)
+    // BaseRequest.get('articles/?page=1&id_user='+this.id_user)
+    BaseRequest.get('users/'+this.id_user+'/articles?page=1')
     .then( data => {
       this.articles = data.results;
       this.quantity = data.count;
@@ -106,7 +107,8 @@ export default {
       this.getArticles(pageNum);
     },
     getArticles(pageNum){
-      BaseRequest.get('articles/?page='+pageNum+'&id_user='+this.id_user)
+      // BaseRequest.get('articles/?page='+pageNum+'&id_user='+this.id_user)
+      BaseRequest.get('users/'+this.id_user+'/articles?page='+pageNum)
       .then( data => {
         this.articles = data.results;
         this.quantity = data.count;
