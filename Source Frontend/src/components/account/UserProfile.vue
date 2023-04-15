@@ -48,7 +48,7 @@
         </div>
 
         <div id="message">
-            <Notification></Notification>
+        <!-- <Notification></Notification> -->
         </div>
 
     </div>
@@ -59,7 +59,7 @@
 
 // import BaseRequest from '../../restful/user/core/BaseRequest';
 import useEventBus from '../../composables/useEventBus';
-import Notification from './../Notification';
+// import Notification from './../Notification';
 import config from '../../config.js';
 
 import ParticleVue32 from "../particle/ParticleVue32.vue";
@@ -68,7 +68,7 @@ import FilePicker from './FilePicker.vue';
 export default {
     name : "UserProfile",
     components: {
-      Notification,
+    //   Notification,
       ParticleVue32,
       FilePicker
     },

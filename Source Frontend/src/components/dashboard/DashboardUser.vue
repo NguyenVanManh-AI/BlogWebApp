@@ -10,7 +10,7 @@
       </div>
       <!-- Model Post Aticle -->
       <div v-if="user" class="modal fade" id="modalPostArticle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog fix_width_modal" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bold;color: #0076e5;font-size: 20px;"><i class="fa-solid fa-feather"></i> New Article</h5>
@@ -42,14 +42,14 @@
               <p class="infor_fullname">{{ article.user.fullname }}</p>
               <p class="infor_created">{{ process_date(article.article.created_at) }}</p>
             </div>
-            <div class="infor_right">
+            <div class="infor_right" v-if="user">
               <button class="btn_setting" @click="showSetting(index)"><i class="fa-solid fa-ellipsis" ></i></button>
               <div class="show_setting" v-if="show_setting[index]">
-                <li @click="goto_edit(article.article.id)"><span class="setting_icon"><i class="fa-solid fa-pen-nib"></i></span> <span>Edit Article</span></li>
-                <li data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Article</span></li>
-                <li><span class="setting_icon"><i class="fa-solid fa-bookmark"></i></span> <span>Save Articlee</span></li>
-                <li><span class="setting_icon"><i class="fa-solid fa-user-xmark"></i></span> <span>Unfollow</span></li>
-                <li><span class="setting_icon"><i class="fa-solid fa-flag"></i></span> <span>Report Article</span></li>
+                <li class="li_edit" v-if="user.id == article.article.id_user" @click="editArticle(article.article.id)"><span class="setting_icon"><i class="fa-solid fa-pen-nib"></i></span> <span>Edit Article</span></li>
+                <li class="li_delete" v-if="user.id == article.article.id_user" @click="openModel(article.article.id);" data-toggle="modal" data-target="#exampleModalDelete"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Article</span></li>
+                <li class="li_save" @click="saveArticle" v-if="user.id != article.article.id_user"><span class="setting_icon"><i class="fa-solid fa-bookmark"></i></span> <span>Save Articlee</span></li>
+                <li class="li_unfollow" @click="unfollowUser" v-if="user.id != article.article.id_user"><span class="setting_icon"><i class="fa-solid fa-user-xmark"></i></span> <span>Unfollow</span></li>
+                <li class="li_report" @click="reportArticle" v-if="user.id != article.article.id_user"><span class="setting_icon"><i class="fa-solid fa-flag"></i></span> <span>Report Article</span></li>
               </div>
             </div>
           </div>
@@ -117,11 +117,30 @@
           </div>
         </div>
       </div>
-      
 
-
-
-
+      <!-- Model Delete Admin -->
+      <div style="background-color: #3d3d3d99;" class="modal fade" id="exampleModalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+                    <button style="padding-right: 50px;padding-top: 30px;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" >&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning" role="alert">
+                        Are you sure you want to delete this article ? <br>
+                        This article will be permanently deleted from the system !
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="close_btn" class="btn btn-outline-secondary" data-dismiss="modal" @click="closeDelete" >Close</button>
+                    <button type="button" class="btn btn-outline-danger" @click="deleteArticle"><i class="fa-solid fa-trash"></i> Delete</button>
+                </div>
+            </div>
+        </div>
+      </div>
 
         <div id="divpaginate">
           <paginate class="pag" id="nvm"
@@ -136,14 +155,14 @@
               :page-class="'page-item'">
           </paginate>
       </div>
-      <Notification></Notification>
+      <!-- <Notification></Notification> -->
     </div>
 </template>
 <script>
 
 import BaseRequest from '../../restful/user/core/BaseRequest';
 import useEventBus from '../../composables/useEventBus';
-import Notification from './../Notification';
+// import Notification from './../Notification';
 import config from '../../config.js';
 import Paginate from 'vuejs-paginate-next';
 
@@ -156,7 +175,7 @@ import ModalArticle from './ModalArticle'
 export default {
     name : "DashboardUser",
     components: {
-      Notification,
+      // Notification,
       ModalPostArticle,
       paginate: Paginate,
       ModalArticle
@@ -179,7 +198,8 @@ export default {
         // length_articles:null,
         // show_setting: new Array(this.length_articles).fill(false),
         show_setting: new Array(10).fill(false), // vì mỗi lần mình lấy ra 10 bài viết nên k cần tính nữa, thiếu thì ít hơn 10 bài viết thôi 
-        //  đôi khi chỗ này có thể để 9999 thay vì 10 => lấy bao nhiêu bài viết cũng được , miễn <= 9999 là nó hoạt động 
+        //  đôi khi chỗ này có thể để 9999 thay vì 10 => lấy bao nhiêu bài viết cũng được , miễn <= 9999 là nó hoạt động
+        id_article_delete:null 
         }
     },
     created(){
@@ -222,6 +242,23 @@ export default {
           emitEvent('eventError','Get All Article Fail !');
         })
       })
+
+      onEvent('addCmt',(comment)=>{
+        for (let index = 0; index < this.articles.length; index++) {
+          if(this.articles[index].article.id == comment.id_article){
+            this.articles[index].comment.push(comment);
+          }
+        }
+      })
+
+      onEvent('deleteCmt',(id_article)=>{
+        for (let index = 0; index < this.articles.length; index++) {
+          if(this.articles[index].article.id == id_article){
+            this.articles[index].comment.pop();
+          }
+        }
+      })
+
     },
     
     beforeUnmount() {
@@ -282,9 +319,46 @@ export default {
         const { emitEvent } = useEventBus();
         emitEvent('ShowArticle',article.article.id);
       },
+      editArticle(id){
+        this.$router.push({name:'ArticleEdit',params:{id:id}}); 
+      },
+      openModel(id){
+        this.id_article_delete = id;
+      },
+      deleteArticle(){
+        BaseRequest.delete('articles/'+this.id_article_delete+'/')
+        .then( () => {
+          var close_btn = window.document.getElementById('close_btn');
+          close_btn.click();
+          const { emitEvent } = useEventBus();
+          emitEvent('eventSuccess','Delete Article Success !');
 
-
-
+          // không cần reload lại trang 
+          BaseRequest.get('articles?page='+this.pageN)
+          .then( data => {
+            this.articles = data.results;
+            this.quantity = data.count;
+          })
+          .catch( () => {
+          })
+        })
+        .catch( () => {
+            const { emitEvent } = useEventBus();
+            emitEvent('eventError','Delete Article Fail !');
+        })
+      },
+      saveArticle(){
+        const { emitEvent } = useEventBus();
+        emitEvent('eventSuccess','Save Article Success !');
+      },
+      unfollowUser(){
+        const { emitEvent } = useEventBus();
+        emitEvent('eventSuccess','Unfollow User Success !');
+      },
+      reportArticle(){
+        const { emitEvent } = useEventBus();
+        emitEvent('eventSuccess','Report Article Success!');
+      }
     },
 }
 </script>
@@ -412,10 +486,25 @@ div.show_setting li {
   padding: 5px 10px;
 }
 div.show_setting li:hover {
-  color: #F84B2F;
   background-color: #ebebeb;
   border-radius: 10px;
 }
+.li_edit:hover {
+  color: #0085FF;
+}
+.li_delete:hover {
+  color: #F84B2F;
+}
+.li_save:hover {
+  color: #0dcc23;
+}
+.li_unfollow:hover {
+  color: #bac100;
+}
+.li_report:hover {
+  color: #ff0000;
+}
+
 div.show_setting li .setting_icon{
   display: inline-block;
   width: 10%;
@@ -474,6 +563,11 @@ div.show_setting li .setting_icon{
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-line-clamp: 2; /* giới hạn số dòng */
+  word-wrap: break-word;
+  cursor: pointer;
+}
+.main_title:hover {
+  color: #0085FF;
 }
 
 .main_center {
@@ -485,6 +579,7 @@ div.show_setting li .setting_icon{
   max-height: 500px;
   overflow: hidden;
   overflow-y: scroll;
+  word-wrap: break-word;
 }
 
 /* footer */

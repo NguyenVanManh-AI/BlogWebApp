@@ -45,7 +45,7 @@
         </div>
   
         <div id="message">
-            <Notification></Notification>
+            <!-- <Notification></Notification> -->
         </div>
   
     </div>
@@ -56,7 +56,7 @@
   
   import BaseRequest from '../../restful/user/core/BaseRequest';
   import useEventBus from '../../composables/useEventBus';
-  import Notification from '../Notification';
+  // import Notification from '../Notification';
   // import config from '../../config.js';
   
   import ParticleVue32 from "../particle/ParticleVue32.vue";
@@ -64,7 +64,7 @@
   export default {
     name : "UserchangePassword",
     components: {
-      Notification,
+      // Notification,
       ParticleVue32,
     },
     data(){

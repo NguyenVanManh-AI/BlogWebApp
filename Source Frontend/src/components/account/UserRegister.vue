@@ -49,7 +49,7 @@
             </form>
           </div><br>
         </div>
-    <Notification></Notification>
+    <!-- <Notification></Notification> -->
     </div>
   </div>
 </template>
@@ -58,7 +58,7 @@
 import BaseRequest from '../../restful/user/core/BaseRequest';
 // import LoginRequest from '../../restful/user/requests/LoginRequest'
 import useEventBus from './../../composables/useEventBus'
-import Notification from './../Notification'
+// import Notification from './../Notification'
 
 import ParticleVue3 from "./../particle/ParticleVue3";
 // import config from '../../config.js';
@@ -66,7 +66,7 @@ import ParticleVue3 from "./../particle/ParticleVue3";
 export default {
     name: "UserRegister",
     components: {
-      Notification,
+      // Notification,
       ParticleVue3,
     },
     setup() {
