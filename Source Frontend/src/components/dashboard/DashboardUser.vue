@@ -364,7 +364,8 @@ export default {
   padding: 10px;
 }
 .header_article {
-  border-bottom: 2px solid rgb(219, 219, 219);
+  /* border-bottom: 2px solid rgb(219, 219, 219); */
+  border-bottom: 1px solid rgb(219, 219, 219);
   display: flex;
   padding-bottom: 10px;
 }
@@ -489,14 +490,14 @@ div.show_setting li .setting_icon{
 /* footer */
 .footer_article {
   margin-top: 10px;
-  border-top: 1px solid silver;
+  border-top: 1px solid rgb(219, 219, 219);
 }
 
 .footer_number_comment {
   display: flex;
   justify-content: end;
   padding: 10px;
-  border-bottom: 1px solid silver;
+  border-bottom: 1px solid rgb(219, 219, 219);
   font-size: 15px;
   color: #767676;
 }

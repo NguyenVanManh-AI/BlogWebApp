@@ -229,17 +229,33 @@ export default {
           this.showModal = true;
         },
         saveComment() {
-          // Save edited comment to the backend
-          // ...
-          this.showModal = false;
-          this.editingComment = null;
+          BaseRequest.patch('comments/'+this.editingComment.id,this.editingComment)
+          .then( () => {
+            this.showModal = false;
+            this.editingComment = null;
+            const { emitEvent } = useEventBus();
+            emitEvent('eventSuccess','Edit Comment Success !');
+          })
+          .catch( () => {
+            const { emitEvent } = useEventBus();
+            emitEvent('eventError','Edit Comment Fail !');
+          })
         },
         cancelEdit() {
           this.showModal = false;
           this.editingComment = null;
         },
         deleteComment(index) {
-          this.full_article.comment.splice(index, 1);
+          BaseRequest.delete('comments/'+this.full_article.comment[index].id)
+          .then( () => {
+            this.full_article.comment.splice(index, 1);
+            const { emitEvent } = useEventBus();
+            emitEvent('eventSuccess','Delete Comment Success !');
+          })
+          .catch( () => {
+            const { emitEvent } = useEventBus();
+            emitEvent('eventError','Delete Comment Fail !');
+          })
         },
 
         // add Comment 
@@ -459,9 +475,10 @@ div.show_setting li .setting_icon{
   margin-top: 10px;
   padding: 10px 0px;
   /* border: 1px solid silver; */
-  border-top: 1px solid silver;
+  border-top: 1px solid rgb(219, 219, 219);
   margin-top: 10px;
   max-height: 500px;
+  min-height: 180px;
   overflow: hidden;
   overflow-y: scroll;
 }
