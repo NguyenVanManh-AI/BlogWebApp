@@ -48,8 +48,8 @@
                             <p class="comment_content infor_created_comment">{{ comment.content }}</p>
                         </div>
                       </div>
-                      <div class="setting_cmt">
-                        <button class="btn_setting_cmt" @click="showSetting(index)"><i class="fa-solid fa-ellipsis" ></i></button>
+                      <div class="setting_cmt" v-if="user">
+                        <button v-if="user.id == comment.id_user" class="btn_setting_cmt" @click="showSetting(index)"><i class="fa-solid fa-ellipsis" ></i></button>
                         <div class="show_setting_cmt" v-if="show_setting_cmt[index]">
                           <li @click="showEditModal(comment)"><span class="setting_icon"><i class="fa-solid fa-pen-to-square"></i></span> <span>Edit Comment</span></li>
                           <li @click="deleteComment(index)" data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Comment</span></li>
@@ -69,7 +69,7 @@
                     </div>
                 </div>
             </div>
-            <div id="add_comment">
+            <div id="add_comment" v-if="user">
                 <div class="header_comment ">
                     <div class="avatar_article">
                         <img :src="user.avatar" alt="Avatar" v-if="user.avatar != null" />
@@ -414,7 +414,7 @@ div.show_setting li .setting_icon{
   background-color: #e0e0e0;
 }
 .btn_setting_cmt:hover {
-  background-color: #e0e0e0;
+  background-color: #F0F2F5;
 }
 
 

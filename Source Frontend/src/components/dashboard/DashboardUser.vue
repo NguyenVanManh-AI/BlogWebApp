@@ -97,7 +97,7 @@
       </div>
 
       <!-- Model Aticle Detail -->
-      <div v-if="user" class="modal fade" id="modalArticleDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="modalArticleDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog fix_width_modal" role="document">
           <div class="modal-content">
             <!-- <div class="modal-header">
@@ -324,11 +324,11 @@ export default {
 #post_article {
   display: flex;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 10px; 
   border: 1px solid silver;
   background-color: white;
   cursor: pointer;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 #avatar img {
   cursor: pointer;
@@ -360,7 +360,7 @@ export default {
   background-color: white;
   border-radius: 10px;
   border: 1px solid silver;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
   padding: 10px;
 }
 .header_article {
