@@ -58,10 +58,12 @@ export default {
             return config.API_URL + path.slice(1);
         },
         goArticle(id){
-            this.$router.push({name:'ArticleDetails',params:{id:id}});
+            // this.$router.push({name:'ArticleDetails',params:{id:id}});
+            window.location = window.location.origin + '/article/' + id;
         },
         goInforAccount(id){
-            this.$router.push({name:'InforAccount',params:{id:id}});
+            // this.$router.push({name:'InforAccount',params:{id:id}});
+            window.location = window.location.origin + '/infor/' + id;
         }
     },
     watch:{
