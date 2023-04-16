@@ -1,10 +1,10 @@
 <template>
-    <div id="dashboard_right">
-        <div class="row m-0 p-2 title-account" >
-            <div class="col-10 d-flex align-items-center justify-content-end" v-if="user">
-                <h1 class="" style="font-size: 20px;font-weight: bold;">{{ user.fullname }}</h1>
+    <div id="dashboard_right" class="pl-2 pt-2 pr-2">
+        <div class="row m-0 pt-1 pl-3 pr-3 pb-1 title-account" >
+            <div class="col-10 d-flex align-items-center justify-content-end" style="cursor: pointer;"  @click="openModal = !openModal"  v-if="user">
+                <h1 class="" style="font-size: 17px;font-weight: bold;">{{ user.fullname }}</h1>
             </div>
-            <div id="account" class="col-2 mr-0 d-flex align-items-end" @click="openModal = !openModal" v-if="user">
+            <div style="cursor: pointer;" id="account" class="col-2 mr-0 d-flex align-items-end" @click="openModal = !openModal" v-if="user">
                 <img :src="user.avatar" alt="Avatar" v-if="user.avatar != null" />
                 <img src='../../assets/avatar.png' alt="Avatar" v-if="user.avatar == null"> 
             </div>
@@ -12,8 +12,9 @@
                 <li @click="login"><span><i class="fa-solid fa-arrow-right-to-bracket"></i></span> Login </li>
             </div>
         </div>
-        <div class="row m-0 p-3" :class="{ openModal: openModal, closeModal: !openModal }" >
+        <div class="row m-0 p-2" :class="{ openModal: openModal, closeModal: !openModal }" >
             <div id="modal_account" class="col-12" >
+                <li v-if="user" @click="goInforAccount(user.id)"><span><i class="fa-solid fa-user-check"></i></span> {{ user.fullname }} </li>
                 <li @click="profile"><span><i class="fa-solid fa-gear"></i></span> Personal page </li>
                 <li><span><i class="fa-solid fa-question"></i></span> Help & Support </li>
                 <li><span><i class="fa-solid fa-info"></i></span> Comments </li>
@@ -64,6 +65,9 @@ export default {
         },
         profile(){
             this.$router.push({name:'UserProfile'});
+        },
+        goInforAccount(id){
+            this.$router.push({name:'InforAccount',params:{id:id}});
         }
     },
 }
@@ -89,13 +93,21 @@ export default {
 }
 #modal_account {
     box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
-    border-radius: 5px;
-    padding: 10px 30px !important;
+    border-radius: 10px;
+    padding: 10px 20px !important;
     background-color: white;
 }
 .title-account {
-    border-bottom: 1px solid silver;
+    border-radius: 10px;
+    /* border-bottom: 1px solid silver; */
     background-color: white;
+    border: 1px solid silver;
+}
+.title-account h1:hover {
+    color: #0076e5;
+}
+.title-account div:nth-child(1):hover h1{
+    color: #0076e5;
 }
 
 #modal_account li {
@@ -105,7 +117,7 @@ export default {
     border: 1px solid silver;
     margin: 5px 0px;
     border-radius: 10px;
-    padding-left: 30px;
+    padding-left: 25px;
     cursor: pointer;
 }
 #modal_account li:hover {

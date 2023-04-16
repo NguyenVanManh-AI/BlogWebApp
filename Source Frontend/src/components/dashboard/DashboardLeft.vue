@@ -1,8 +1,8 @@
 <template>
     <div id="dashboard_left">
-        <div class="row pt-2 pl-3 pr-3 pb-2">
-            <div class="col-2 mr-0 d-flex align-items-end"><img style="max-width: 120% !important;" src="logo.png"/></div>
-            <div class="col-10 ">
+        <div class="main_right col-12 d-flex pt-2 pb-2" >
+            <div class="logo_blog" @click="goMain"><img :src="logo"/></div>
+            <div class="form_search">
                 <div class="input-group">
                     <input v-model="text_search" type="text" class="shadow-none form-control" id="text_search" placeholder="Search mame or title article">
                     <div class="input-group-prepend">
@@ -30,6 +30,7 @@ export default {
     data(){
         return{
             text_search:'',
+            logo: require('@/assets/logo.png')
         }
     },
     created(){
@@ -39,7 +40,9 @@ export default {
 
     },
     methods:{
-        
+        goMain(){
+            this.$router.push({name:"DashboardMain"});
+        }
     },
     watch:{
         text_search:function(){
@@ -78,4 +81,23 @@ export default {
 .input-group:focus-within .input-group-text {
   border-color: #4c90f5;
 }
+.main_right {
+    align-items: center;
+}
+.logo_blog {
+    width: 12%;
+    cursor: pointer;
+}
+.logo_blog img{
+    width: 100%;
+    object-fit: cover;
+}
+.form_search {
+    padding-left:10px;
+    width: 88%;
+}
+
+
+
+
 </style>
