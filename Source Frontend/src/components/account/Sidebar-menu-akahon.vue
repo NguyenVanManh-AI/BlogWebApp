@@ -35,8 +35,8 @@
           <div class="line"></div>
           <span>
             <li @click="dashboard">
-              <a :class="{adefault:true,aclick:colors[2]}"><i class="fa-solid fa-house"></i><span class="links_name">Dashboard</span></a>
-              <span class="tooltip">Dashboard</span>
+              <a :class="{adefault:true,aclick:colors[2]}"><i class="fa-solid fa-house"></i><span class="links_name">Main</span></a>
+              <span class="tooltip">Main</span>
             </li>
           </span>
 
