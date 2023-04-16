@@ -185,6 +185,7 @@
         </div>
       </div>
       <div class="col-2" style="background-color: #F2F4F6;"></div>
+      <div class="logo_blog" @click="goMain"><img :src="logo"/></div>
       <div id="divpaginate">
         <paginate class="pag" id="nvm"
             :page-count="Math.ceil(this.quantity/6)"
@@ -252,7 +253,8 @@ export default {
               gender:null,
               date_of_birth:null,
               avatar:null
-            }
+            },
+            logo: require('@/assets/logo.png'),
         }
     },
     created(){
@@ -436,6 +438,9 @@ export default {
 
       goArticle(id){
         this.$router.push({name:'ArticleDetails',params:{id:id}});
+      },
+      goMain(){
+        this.$router.push({name:"DashboardMain"});
       },
     },
 }
@@ -805,4 +810,20 @@ div.show_setting li .setting_icon{
   font-weight: bold;
 }
 
+/* logo_blog */
+.logo_blog {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  background-color: white;
+  border-radius: 100px;
+  border: 5px solid white;
+  transition: all 0.5s ease;
+}
+.logo_blog:hover {
+  border: 5px solid #0085FF;
+}
 </style>
