@@ -11,17 +11,27 @@
                 </div>
             </div>
         </div>
-        <div class="row pl-2 pr-3 pb-2" id="list_search">
-            <div class="col-12">
-                <li>
-                    <img src="https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-6/338856899_181123218062404_3931839156424930272_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=PAV4XNO4wngAX_nOTx-&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfDCl0lqy6BVKPq6Dr5jjk8M0kU_oXuk7RTg5pitfZbMBA&oe=64310B58"/>
-                    <span>Nguyen Van Manh</span>
-                </li>
+        <div class="row" id="list_search" v-if="text_search != ''">
+            <div class="col-12 p-1" id="inner_search">
+                <div class="item_user_article" v-for="(user_article,index) in user_articles" :key="index">
+                    <div class="item_user" v-if="user_article.user" @click="goInforAccount(user_article.user.id)">
+                        <img :src="(process_url(user_article.user.avatar))">
+                        <span> {{ user_article.user.fullname }}</span>
+                    </div>
+                    <div class="item_article" v-if="user_article.aritcle" @click="goArticle(user_article.aritcle.id)">
+                        <i class="fa-solid fa-blog" style="margin-right: 8px;"></i> {{ user_article.aritcle.title }} 
+                    </div>
+                </div>
+                <div class="no_result" v-if="user_articles.length == 0"><i class="fa-solid fa-magnifying-glass"></i> No result</div>
             </div>
         </div>
     </div>
 </template>
 <script>
+
+import BaseRequest from '../../restful/user/core/BaseRequest';
+import config from '../../config.js';
+
 export default {
     name : "DashboardLeft",
     components: {
@@ -30,7 +40,8 @@ export default {
     data(){
         return{
             text_search:'',
-            logo: require('@/assets/logo.png')
+            logo: require('@/assets/logo.png'),
+            user_articles:[],
         }
     },
     created(){
@@ -42,11 +53,28 @@ export default {
     methods:{
         goMain(){
             this.$router.push({name:"DashboardMain"});
+        },
+        process_url(path){
+            return config.API_URL + path.slice(1);
+        },
+        goArticle(id){
+            this.$router.push({name:'ArticleDetails',params:{id:id}});
+        },
+        goInforAccount(id){
+            this.$router.push({name:'InforAccount',params:{id:id}});
         }
     },
     watch:{
         text_search:function(){
-            console.log(this.text_search);
+            var inp = {
+                text_search:this.text_search 
+            };
+            BaseRequest.post('search',inp)
+            .then( (data) => {
+                this.user_articles = data.results;
+            })
+            .catch( () => {
+            })
         }
     }
 }
@@ -97,7 +125,79 @@ export default {
     width: 88%;
 }
 
+#list_search {
+    margin-left: 10px;
+    margin-right: 5px;
+    padding: 5px 10px;
+    background-color: white;
+    border:1px solid silver;
+    border-radius: 10px;
+}
+#inner_search {
+    max-height: 80vh;
+    overflow: hidden;
+    overflow-y: scroll;
+}
 
+/* item_user */
+.item_user {
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.item_user:hover {
+    background-color: #e4e4e4;
+}
+.item_user img {
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+.item_user span {
+    font-weight: bold;
+}
 
+/* item_article */
+.item_article {
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px 10px;
+    padding-top: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    padding-left: 60px;
 
+    /* Sử dụng kỹ thuật clamp() để giới hạn chiều cao */
+    /* height: clamp(0px, 30px, auto); */
+    max-height: 55px;
+    
+    /* Ẩn dấu ba chấm ban đầu */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2; /* giới hạn số dòng */
+    word-wrap: break-word;
+    cursor: pointer;
+}
+.item_article:hover {
+    background-color: #e4e4e4;
+}
+
+.no_result {
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    padding: 5px 10px;
+    justify-content: center;
+    background-color: #e4e4e4;
+    font-weight: bold;
+}
+.no_result i {
+    margin-right: 10px;
+}
 </style>
