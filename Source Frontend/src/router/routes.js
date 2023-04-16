@@ -17,6 +17,8 @@ import HelpSupport from './../components/account/other/HelpSupport'
 import UserComments from './../components/account/other/UserComments'
 
 import DashboardMain from './../components/dashboard/DashboardMain'
+import ArticleDetails from './../components/dashboard/ArticleDetails'
+import InforAccount from './../components/dashboard/InforAccount'
 // import DashboardLeft from './../components/dashboard/DashboardLeft'
 // import DashboardRight from './../components/dashboard/DashboardRight'
 // import DashboardUser from './../components/dashboard/DashboardUser'
@@ -45,6 +47,8 @@ const routes = [
     },
     // {path: '/dashboard',component: DashboardMain,name:'DashboardMain'}, 
     {path: '/main',component: DashboardMain,name:'DashboardMain'}, 
+    {path: '/article/:id',component: ArticleDetails,name:'ArticleDetails'}, 
+    {path: '/infor/:id',component: InforAccount,name:'InforAccount'}, 
 
     {path: '/error',component: CompError,name:'CompError'}, 
     {path: '/:NotFound(.*)*',component: NotFound,name:'NotFound'}
@@ -62,7 +66,13 @@ router.beforeEach((to, from, next) => {
     const user = localStorage.getItem('user');
     
     if (requiresLogin && !user) {
-      if (to.path !== '/' && !to.path.startsWith('/posts/')) {
+      if(to.path.startsWith('/article/')){
+        next();
+      }
+      else if(to.path.startsWith('/infor/')){
+        next();
+      }
+      else if (to.path !== '/' && !to.path.startsWith('/posts/')) {
         next({ name: 'Login' });
         alert('Bạn chưa đăng nhập!');
       } else {

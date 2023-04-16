@@ -1,98 +1,129 @@
 <template>
-    <div id="modal_article" v-if="full_article">
-        <div class="big_article">
-            <div class="header_article">
-                <div class="avatar_article">
-                    <img :src="process_url(full_article.user.avatar)" alt="Avatar" v-if="full_article.user.avatar != null" />
-                    <img src='../../assets/avatar.png' alt="Avatar" v-if="full_article.user.avatar == null"> 
-                </div>
-                <div class="infor_article">
-                    <div class="infor_left">
-                        <p class="infor_fullname" @click="goInforAccount(full_article.user.id)">{{ full_article.user.fullname }}</p>
-                        <p class="infor_created">{{ process_date(full_article.article.created_at) }}</p>
-                    </div>
-                    <div class="infor_right" v-if="user">
-                      <button class="btn_setting" @click="show_setting = !show_setting"><i class="fa-solid fa-ellipsis" ></i></button>
-                        <div class="show_setting" v-if="show_setting">
-                            <li class="li_edit" v-if="user.id == full_article.article.id_user" @click="editArticle(full_article.article.id)"><span class="setting_icon"><i class="fa-solid fa-pen-nib"></i></span> <span>Edit Article</span></li>
-                            <!-- <li class="li_delete" v-if="user.id == full_article.article.id_user" @click="openModel(full_article.article.id);" data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Article</span></li> -->
-                            <li class="li_save" v-if="user.id != full_article.article.id_user" @click="saveArticle" ><span class="setting_icon"><i class="fa-solid fa-bookmark"></i></span> <span>Save Articlee</span></li>
-                            <li class="li_unfollow" v-if="user.id != full_article.article.id_user" @click="unfollowUser" ><span class="setting_icon"><i class="fa-solid fa-user-xmark"></i></span> <span>Unfollow</span></li>
-                            <li class="li_report" v-if="user.id != full_article.article.id_user" @click="reportArticle" ><span class="setting_icon"><i class="fa-solid fa-flag"></i></span> <span>Report Article</span></li>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="content_main_article">
-                <div @click="get_article_detail(article)" class="main_title" data-toggle="modal" data-target="#modalArticleDetails" >
-                    <i class="fa-solid fa-play"></i> {{ full_article.article.title }}
-                </div>
-                <div class="main_center">
-                    <i class="fa-solid fa-blog"></i>
-                </div>
-                <div class="main_content" >
-                    <div v-html="full_article.article.content"></div>
-                </div>
-            </div>
-            <div id="list_comment">
-                <div class="comment_article" v-for="(comment,index) in full_article.comment" :key="comment.di">
-                    <div class="avatar_comment">
-                        <img :src="process_url(comment.avatar)" alt="Avatar" v-if="comment.avatar != null" />
-                        <img src='../../assets/avatar.png' alt="Avatar" v-if="comment.avatar == null"> 
-                    </div>
-                    <div class="main_infor_comment" v-if="!editingComment || editingComment.id !== comment.id">
-                      <div class="infor_comment">
-                        <div class="infor_left">
-                            <p class="author" v-if="full_article.user.id == comment.id_user"><i class="fa-solid fa-at"></i> Author</p>
-                            <p class="infor_fullname_comment" @click="goInforAccount(comment.id_user)">{{ comment.fullname }}</p>
-                            <p class="comment_content infor_created_comment">{{ comment.content }}</p>
-                        </div>
-                      </div>
-                      <div class="setting_cmt" v-if="user">
-                        <button class="btn_setting_cmt" @click="showSetting(index)"><i class="fa-solid fa-ellipsis" ></i></button>
-                        <div class="show_setting_cmt" v-if="show_setting_cmt[index]">
-                          <li class="li_edit" v-if="user.id == comment.id_user" @click="showEditModal(comment)"><span class="setting_icon"><i class="fa-solid fa-pen-to-square"></i></span> <span>Edit Comment</span></li>
-                          <li class="li_delete" v-if="user.id == comment.id_user" @click="deleteComment(index)" data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Comment</span></li>
-                          <li class="li_report" v-if="user.id != comment.id_user" @click="reportComment()" data-toggle="modal" data-target="#modalDeleteArticle"><span class="setting_icon"><i class="fa-solid fa-flag"></i></span> <span>Report Comment</span></li>
-                        </div>
-                      </div>
-                    </div>
-                    <div v-else>
-                      <div class="infor_comment">
-                        <div class="infor_left">
-                            <p class="author" v-if="full_article.user.id == comment.id_user"><i class="fa-solid fa-at"></i> Author</p>
-                            <p class="infor_fullname_comment">{{ comment.fullname }}</p>
-                            <textarea class="edit_content" v-model="editingComment.content"></textarea>
-                            <button class="btn_save" @click="saveComment()"><i class="fa-solid fa-check"></i> Save</button>
-                            <button class="btn_cancel" @click="cancelEdit()"><i class="fa-solid fa-xmark"></i> Cancel</button>
-                          </div>
-                      </div>
-                    </div>
-                </div>
-            </div>
-            <div id="add_comment" v-if="user">
-                <div class="header_comment ">
-                    <div class="avatar_article">
-                        <img :src="user.avatar" alt="Avatar" v-if="user.avatar != null" />
-                        <img src='../../assets/avatar.png' alt="Avatar" v-if="user.avatar == null"> 
-                    </div>
-                    <div class="send_content_comment">
-                        <div >
-                            <div class="input-group">
-                              <form @submit.prevent="addCmt">
-                                <textarea @keydown.enter.prevent="handleEnter" style="background-color: #F0F2F5;" v-model="addComment.content" type="text" class="form-control input_content" id="inlineFormInputGroup" placeholder="Write a comment..."></textarea>
-                                <button type="submit" class="input-group-prepend" ></button>
-                              </form>
+    <div id="dashboard" class="row m-0">
+        <div id="left" class="col-3 p-0"><DashboardLeft></DashboardLeft></div>
+        <div class="col-6 p-0" style="background-color: #F2F4F6;">
+            <div id="dashboard_user">
+                <div id="modal_article" v-if="full_article">
+                    <div class="big_article">
+                        <div class="header_article">
+                            <div class="avatar_article">
+                                <img :src="process_url(full_article.user.avatar)" alt="Avatar" v-if="full_article.user.avatar != null" />
+                                <img src='../../assets/avatar.png' alt="Avatar" v-if="full_article.user.avatar == null"> 
                             </div>
+                            <div class="infor_article">
+                                <div class="infor_left">
+                                    <p class="infor_fullname" @click="goInforAccount(full_article.user.id)">{{ full_article.user.fullname }}</p>
+                                    <p class="infor_created">{{ process_date(full_article.article.created_at) }}</p>
+                                </div>
+                                <div class="infor_right" v-if="user">
+                                <button class="btn_setting" @click="show_setting = !show_setting"><i class="fa-solid fa-ellipsis" ></i></button>
+                                    <div class="show_setting" v-if="show_setting">
+                                        <li class="li_edit" v-if="user.id == full_article.article.id_user" @click="editArticle(full_article.article.id)"><span class="setting_icon"><i class="fa-solid fa-pen-nib"></i></span> <span>Edit Article</span></li>
+                                        <li class="li_delete" v-if="user.id == full_article.article.id_user" @click="openModel(full_article.article.id);" data-toggle="modal" data-target="#exampleModalDelete"><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Article</span></li>
+                                        <li class="li_save" v-if="user.id != full_article.article.id_user" @click="saveArticle" ><span class="setting_icon"><i class="fa-solid fa-bookmark"></i></span> <span>Save Articlee</span></li>
+                                        <li class="li_unfollow" v-if="user.id != full_article.article.id_user" @click="unfollowUser" ><span class="setting_icon"><i class="fa-solid fa-user-xmark"></i></span> <span>Unfollow</span></li>
+                                        <li class="li_report" v-if="user.id != full_article.article.id_user" @click="reportArticle" ><span class="setting_icon"><i class="fa-solid fa-flag"></i></span> <span>Report Article</span></li>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content_main_article">
+                            <div @click="get_article_detail(article)" class="main_title" data-toggle="modal" data-target="#modalArticleDetails" >
+                                <i class="fa-solid fa-play"></i> {{ full_article.article.title }}
+                            </div>
+                            <div class="main_center">
+                                <i class="fa-solid fa-blog"></i>
+                            </div>
+                            <div class="main_content" >
+                                <div v-html="full_article.article.content"></div>
+                            </div>
+                        </div>
+                        <div id="list_comment">
+                            <div class="comment_article" v-for="(comment,index) in full_article.comment" :key="comment.di">
+                                <div class="avatar_comment">
+                                    <img :src="process_url(comment.avatar)" alt="Avatar" v-if="comment.avatar != null" />
+                                    <img src='../../assets/avatar.png' alt="Avatar" v-if="comment.avatar == null"> 
+                                </div>
+                                <div class="main_infor_comment" v-if="!editingComment || editingComment.id !== comment.id">
+                                <div class="infor_comment">
+                                    <div class="infor_left">
+                                        <p class="author" v-if="full_article.user.id == comment.id_user"><i class="fa-solid fa-at"></i> Author</p>
+                                        <p class="infor_fullname_comment" @click="goInforAccount(comment.id_user)">{{ comment.fullname }}</p>
+                                        <p class="comment_content infor_created_comment">{{ comment.content }}</p>
+                                    </div>
+                                </div>
+                                <div class="setting_cmt" v-if="user">
+                                    <button class="btn_setting_cmt" @click="showSetting(index)"><i class="fa-solid fa-ellipsis" ></i></button>
+                                    <div class="show_setting_cmt" v-if="show_setting_cmt[index]">
+                                    <li class="li_edit" v-if="user.id == comment.id_user" @click="showEditModal(comment)"><span class="setting_icon"><i class="fa-solid fa-pen-to-square"></i></span> <span>Edit Comment</span></li>
+                                    <li class="li_delete" v-if="user.id == comment.id_user" @click="deleteComment(index)" ><span class="setting_icon"><i class="fa-solid fa-trash"></i></span> <span>Delete Comment</span></li>
+                                    <li class="li_report" v-if="user.id != comment.id_user" @click="reportComment()" ><span class="setting_icon"><i class="fa-solid fa-flag"></i></span> <span>Report Comment</span></li>
+                                    </div>
+                                </div>
+                                </div>
+                                <div v-else>
+                                <div class="infor_comment">
+                                    <div class="infor_left">
+                                        <p class="author" v-if="full_article.user.id == comment.id_user"><i class="fa-solid fa-at"></i> Author</p>
+                                        <p class="infor_fullname_comment">{{ comment.fullname }}</p>
+                                        <textarea class="edit_content" v-model="editingComment.content"></textarea>
+                                        <button class="btn_save" @click="saveComment()"><i class="fa-solid fa-check"></i> Save</button>
+                                        <button class="btn_cancel" @click="cancelEdit()"><i class="fa-solid fa-xmark"></i> Cancel</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="add_comment" v-if="user">
+                            <div class="header_comment ">
+                                <div class="avatar_article">
+                                    <img :src="user.avatar" alt="Avatar" v-if="user.avatar != null" />
+                                    <img src='../../assets/avatar.png' alt="Avatar" v-if="user.avatar == null"> 
+                                </div>
+                                <div class="send_content_comment">
+                                    <div >
+                                        <div class="input-group">
+                                        <form @submit.prevent="addCmt">
+                                            <textarea @keydown.enter.prevent="handleEnter" style="background-color: #F0F2F5;" v-model="addComment.content" type="text" class="form-control input_content" id="inlineFormInputGroup" placeholder="Write a comment..."></textarea>
+                                            <button type="submit" class="input-group-prepend" ></button>
+                                        </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div >
+                </div>
+                <br>
+                <!-- <Notification></Notification> -->
+                </div>
+            </div>
+            <!-- Model Delete Admin -->
+            <div style="background-color: #3d3d3d99;" class="modal fade" id="exampleModalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document" >
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+                            <button style="padding-right: 50px;padding-top: 30px;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" >&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-warning" role="alert">
+                                Are you sure you want to delete this article ? <br>
+                                This article will be permanently deleted from the system !
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="close_btn" class="btn btn-outline-secondary" data-dismiss="modal" @click="closeDelete" >Close</button>
+                            <button type="button" class="btn btn-outline-danger" @click="deleteArticle"><i class="fa-solid fa-trash"></i> Delete</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-      <div >
-    </div>
-    <br>
-    <!-- <Notification></Notification> -->
+        <div id="right" class="col-3 p-0"><DashboardRight></DashboardRight></div>
     </div>
 </template>
 <script>
@@ -106,10 +137,15 @@ import config from '../../config.js';
 // import ParticleVue32 from "../particle/ParticleVue32.vue";
 // import FilePicker from './FilePicker.vue';
 
+import DashboardLeft from './DashboardLeft.vue'
+import DashboardRight from './DashboardRight.vue'
+
 export default {
-    name : "ModalArticle",
+    name : "ArticleDetails",
     components: {
-        // Notification
+        // Notification,
+        DashboardLeft,
+        DashboardRight,
     },
     data(){
         return{
@@ -147,6 +183,7 @@ export default {
               id_article:null,
               content:''
             },
+            id_article_delete:null 
         }
     },
     // props: ['full_article'],
@@ -156,33 +193,35 @@ export default {
     created(){
     },
     mounted(){
-      // this.full_article = this.article; 
-      // console.log(this.full_article);
-      // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
+        // this.full_article = this.article; 
+        // console.log(this.full_article);
+        // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
+        if (document.body.style.paddingLeft !== "0px") {
+          document.body.style.paddingLeft = "0px";
+        }
 
-      this.user = JSON.parse(window.localStorage.getItem('user'));
-      if(this.user){
-        if(this.user.avatar) this.user.avatar = config.API_URL + this.user.avatar ;
-      }
+        this.user = JSON.parse(window.localStorage.getItem('user'));
+        if(this.user){
+          if(this.user.avatar) this.user.avatar = config.API_URL + this.user.avatar ;
+        }
 
-      document.addEventListener('click', this.handleOutsideClick);
-      const { onEvent } = useEventBus()
-      onEvent('ShowArticle',(id_article)=>{
+        var id_article = this.$route.params.id
+
+        document.addEventListener('click', this.handleOutsideClick);
         BaseRequest.get('articles/'+id_article)
         .then( data => {
-          this.full_article = data.results[0];
-          // this.list_comment = article.comment;
-          // this.count_cmt = this.list_comment.length;
-          this.count_cmt = this.full_article.comment.length;
-          this.show_setting_cmt = new Array(this.count_cmt).fill(false);
+            this.full_article = data.results[0];
+            // this.list_comment = article.comment;
+            // this.count_cmt = this.list_comment.length;
+            this.count_cmt = this.full_article.comment.length;
+            this.show_setting_cmt = new Array(this.count_cmt).fill(false);
 
-          // add Comment 
-          this.addComment.id_user = this.user.id;
-          this.addComment.id_article = this.full_article.article.id;
+            // add Comment 
+            this.addComment.id_user = this.user.id;
+            this.addComment.id_article = this.full_article.article.id;
         })
         .catch( () => {
         })
-      })
     },
     beforeUnmount() {
         // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
@@ -298,15 +337,7 @@ export default {
           close_btn.click();
           const { emitEvent } = useEventBus();
           emitEvent('eventSuccess','Delete Article Success !');
-
-          // không cần reload lại trang 
-          BaseRequest.get('articles?page='+this.pageN)
-          .then( data => {
-            this.articles = data.results;
-            this.quantity = data.count;
-          })
-          .catch( () => {
-          })
+          this.$router.push({name:"DashboardMain"});
         })
         .catch( () => {
             const { emitEvent } = useEventBus();
@@ -341,7 +372,24 @@ export default {
 }
 
 /* Article */
-
+#dashboard_user {
+  /* border: 1px solid green; */
+  padding: 8px;
+  background-color: #F2F4F6;
+  overflow: hidden;
+  max-height: 100vh;
+  overflow: hidden;
+  overflow-y: scroll;
+  /* padding-left: 25px; */
+  /* padding-right: 25px; */
+  /* margin-right: 15px; */
+}
+#dashboard_user::-webkit-scrollbar-track { 
+  background: transparent !important;  
+}
+#dashboard_user::-webkit-scrollbar {
+  display: none !important;
+}
 .big_article {
   background-color: white;
   border-radius: 10px;
@@ -524,9 +572,6 @@ div.show_setting li .setting_icon{
   margin-bottom: 10px;
 }
 .main_content {
-  max-height: 500px;
-  overflow: hidden;
-  overflow-y: scroll;
   word-wrap: break-word;
 }
 
@@ -538,10 +583,7 @@ div.show_setting li .setting_icon{
   /* border: 1px solid silver; */
   border-top: 1px solid rgb(219, 219, 219);
   margin-top: 10px;
-  max-height: 500px;
   min-height: 180px;
-  overflow: hidden;
-  overflow-y: scroll;
 }
 
 
@@ -606,7 +648,7 @@ div.show_setting li .setting_icon{
 
 .edit_content {
   border-radius: 5px;
-  width: 45vw;
+  width: 42vw;
   display: block;
   height: 15vh;
 }
@@ -637,7 +679,7 @@ div.show_setting li .setting_icon{
 
 /* Send Comment */
 .input_content {
-  width: 53vw;
+  width: 42vw;
   margin-left: 6px;
   display: block;
   border-radius: 10px;

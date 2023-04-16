@@ -94,7 +94,9 @@ a {
   width: 12px !important;
   cursor: pointer !important;
 }
-
+#dashboard_user::-webkit-scrollbar-track { 
+  background: transparent !important;  
+}
 /* Hiển thị thanh cuộn khi hover vào */
 /* #dashboard_user:hover::-webkit-scrollbar {
   display: block !important;

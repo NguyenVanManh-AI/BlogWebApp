@@ -39,8 +39,8 @@
           </div>
           <div class="infor_article">
             <div class="infor_left">
-              <p class="infor_fullname">{{ article.user.fullname }}</p>
-              <p class="infor_created">{{ process_date(article.article.created_at) }}</p>
+              <p class="infor_fullname" @click="goInforAccount(article.user.id)">{{ article.user.fullname }}</p>
+              <p class="infor_created" @click="goArticle(article.article.id)" >{{ process_date(article.article.created_at) }}</p>
             </div>
             <div class="infor_right" v-if="user">
               <button class="btn_setting" @click="showSetting(index)"><i class="fa-solid fa-ellipsis" ></i></button>
@@ -358,6 +358,13 @@ export default {
       reportArticle(){
         const { emitEvent } = useEventBus();
         emitEvent('eventSuccess','Report Article Success!');
+      },
+
+      goArticle(id){
+        this.$router.push({name:'ArticleDetails',params:{id:id}});
+      },
+      goInforAccount(id){
+        this.$router.push({name:'InforAccount',params:{id:id}});
       }
     },
 }
@@ -385,15 +392,15 @@ export default {
 }
 #dashboard_user {
   /* border: 1px solid green; */
-  padding: 10px;
+  padding: 8px;
   background-color: #F2F4F6;
   overflow: hidden;
   overflow-y: scroll;
   height: 100vh;
   /* padding-left: 25px;
   padding-right: 25px; */
-  margin: 0px 25px;
-  margin-left: 15px;
+  /* margin: 0px 25px; */
+  /* margin-left: 15px; */
 }
 #post_article {
   display: flex;
