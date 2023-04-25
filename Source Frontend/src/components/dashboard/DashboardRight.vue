@@ -16,8 +16,8 @@
             <div id="modal_account" class="col-12" >
                 <li v-if="user" @click="goInforAccount(user.id)"><span><i class="fa-solid fa-user-check"></i></span> {{ user.fullname }} </li>
                 <li @click="profile"><span><i class="fa-solid fa-gear"></i></span> Personal page </li>
-                <li><span><i class="fa-solid fa-question"></i></span> Help & Support </li>
-                <li><span><i class="fa-solid fa-info"></i></span> Comments </li>
+                <li @click="helpSupport"><span><i class="fa-solid fa-question"></i></span> Help & Support </li>
+                <li @click="comments"><span><i class="fa-solid fa-info"></i></span> Comments </li>
                 <li @click="logout"><span><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Log out </li>
             </div>
         </div>
@@ -68,7 +68,13 @@ export default {
         },
         goInforAccount(id){
             this.$router.push({name:'InforAccount',params:{id:id}});
-        }
+        },
+        helpSupport:function(){
+            this.$router.push({name:'HelpSupport'});
+        },
+        comments:function(){
+            this.$router.push({name:'UserComments'});
+        },
     },
 }
 </script>
