@@ -66,6 +66,7 @@ CORS_ORIGIN_WHITELIST = [
     'https://pbl-5.vercel.app',
     'https://pbl5.vercel.app',
     'https://blog-django-app.vercel.app',
+    'https://blog-web-e8ai3pgz9-nguyenvanmanh-ai.vercel.app'
 ]
 
 CORS_ALLOW_METHODS = [
