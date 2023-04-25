@@ -45,7 +45,6 @@ const routes = [
             {path:'comment',name:'UserComments',component:UserComments},
         ]
     },
-    // {path: '/dashboard',component: DashboardMain,name:'DashboardMain'}, 
     {path: '/main',component: DashboardMain,name:'DashboardMain'}, 
     {path: '/article/:id',component: ArticleDetails,name:'ArticleDetails'}, 
     {path: '/infor/:id',component: InforAccount,name:'InforAccount'}, 
@@ -61,28 +60,49 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const excludePages = ['/login', '/register', '/main'];
-    const requiresLogin = !excludePages.includes(to.path);
-    const user = localStorage.getItem('user');
-    
-    if (requiresLogin && !user) {
-      if(to.path.startsWith('/article/')){
-        next();
-      }
-      else if(to.path.startsWith('/infor/')){
-        next();
-      }
-      else if (to.path !== '/' && !to.path.startsWith('/posts/')) {
-        next({ name: 'Login' });
-        alert('Bạn chưa đăng nhập!');
-      } else {
-        next(false); 
-      }
-    } else if (to.path === '/') {
-      next({ name: 'DashboardMain' }); 
-    } else {
-        next(); 
-    }
+  if(to.path.includes('/article')) next();
+  if(to.path.includes('/infor')) next();
+  const user = localStorage.getItem('user');
+  const requiresAuth = !['/main', '/login', '/register'].includes(to.path);
+  if (requiresAuth && !user) {
+    next('/login');
+  } else {
+    next();
+  }
 });
+
+// router.beforeEach((to, from, next) => {
+
+//     if(to.path.includes('/main')) next(); 
+//     if(to.path.includes('/article ')) next();
+//     if(to.path.includes('/register ')) next();
+//     if(to.path.includes('/login ')) next();
+    
+//     // const excludePages = ['/login', '/register', '/main'];
+//     // const requiresLogin = !excludePages.includes(to.path);
+//     // const user = localStorage.getItem('user');
+    
+//     // if (requiresLogin && !user) {
+//     //   if(to.path.startsWith('/article/')){
+//     //     next();
+//     //   }
+//     //   if(to.path.startsWith('/infor/')){
+//     //     next();
+//     //   }
+//     //   // else if (to.path !== '/' && !to.path.startsWith('/posts/')) {
+//     //   //   next({ name: 'Login' });
+//     //   //   alert('Bạn chưa đăng nhập!');
+//     //   // } else {
+//     //   //   next(false); 
+//     //   // }
+//     //   // else {
+//     //   //   next({ name: 'NotFound' }); 
+//     //   // }
+//     // } else if (to.path === '/') {
+//     //   next({ name: 'DashboardMain' }); 
+//     // } else {
+//     //     next(); 
+//     // }
+// });
 
 export default router

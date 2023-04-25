@@ -19,7 +19,9 @@ export default {
     Notification,
   },
   mounted() {
-    this.$router.push({name:"DashboardMain"});
+    if(window.location.pathname === '/' || window.location.pathname === ''){
+      this.$router.push({name:"DashboardMain"});
+    }
   //   const shortcutIcon = document.querySelector('link[rel="shortcut icon"]');
   //   if (shortcutIcon) {
   //     shortcutIcon.href = '/logo.png';

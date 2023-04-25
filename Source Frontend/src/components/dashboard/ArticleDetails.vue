@@ -229,6 +229,9 @@ export default {
             this.addComment.id_article = this.full_article.article.id;
         })
         .catch( () => {
+          // Để chuyển đến component NotFound mà không thay đổi path hiện tại, bạn có thể sử dụng phương thức replace() thay vì push() như sau:
+          // this.$router.push({ name: 'NotFound' }); 
+          // this.$router.replace({ name: 'NotFound' });
         })
     },
     beforeUnmount() {
