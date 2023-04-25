@@ -21,10 +21,10 @@
             <div class="modal-body">
               <ModalPostArticle></ModalPostArticle>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <!-- <div class="modal-footer"> -->
+              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
               <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-            </div>
+            <!-- </div> -->
           </div>
         </div>
       </div>
@@ -155,6 +155,11 @@
               :page-class="'page-item'">
           </paginate>
       </div>
+      <div id="toTop">
+        <button @click="scrollToTop" v-if="showButton">
+          <i class="fa-solid fa-chevron-up"></i>
+        </button>
+      </div>
       <!-- <Notification></Notification> -->
     </div>
 </template>
@@ -199,8 +204,9 @@ export default {
         // show_setting: new Array(this.length_articles).fill(false),
         show_setting: new Array(10).fill(false), // vì mỗi lần mình lấy ra 10 bài viết nên k cần tính nữa, thiếu thì ít hơn 10 bài viết thôi 
         //  đôi khi chỗ này có thể để 9999 thay vì 10 => lấy bao nhiêu bài viết cũng được , miễn <= 9999 là nó hoạt động
-        id_article_delete:null 
-        }
+        id_article_delete:null,
+        showButton: true
+      }
     },
     created(){
 
@@ -250,7 +256,6 @@ export default {
           }
         }
       })
-
       onEvent('deleteCmt',(id_article)=>{
         for (let index = 0; index < this.articles.length; index++) {
           if(this.articles[index].article.id == id_article){
@@ -258,16 +263,33 @@ export default {
           }
         }
       })
-
+      window.addEventListener("scroll", this.handleScroll);
     },
     
     beforeUnmount() {
       // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
       document.removeEventListener('click', this.handleOutsideClick);
+      var dashboard_user = document.getElementById("dashboard_user");
+      dashboard_user.removeEventListener("scroll", this.handleScroll);
     },
 
 
     methods:{
+      scrollToTop() {
+        var dashboard_user = document.getElementById("dashboard_user");
+        dashboard_user.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      },
+      handleScroll() {
+        var dashboard_user = document.getElementById("dashboard_user");
+        if (dashboard_user.pageYOffset > 10) {
+          this.showButton = true;
+        } else {
+          this.showButton = false;
+        }
+      },
       process_url(path){
         return config.API_URL + path.slice(1);
       },
@@ -371,6 +393,28 @@ export default {
 </script>
 <style scoped>
 
+#toTop {
+  position: absolute;
+  right: -300px;
+  bottom: 60px;
+  background-color: rgb(144, 220, 255);
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 5px solid white;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+#toTop:hover {
+  border: 5px solid white;
+  border: 5px solid #0085FF;
+  background-color: white;
+}
 /* Post Article */
 #title_blog {
   font-size: 30px;

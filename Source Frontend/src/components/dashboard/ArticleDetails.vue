@@ -86,6 +86,7 @@
                                         <form @submit.prevent="addCmt">
                                             <textarea @keydown.enter.prevent="handleEnter" style="background-color: #F0F2F5;" v-model="addComment.content" type="text" class="form-control input_content" id="inlineFormInputGroup" placeholder="Write a comment..."></textarea>
                                             <button type="submit" class="input-group-prepend" ></button>
+                                            <p style="font-size: 12px;padding-left: 6px;color: #515151;margin-top: 2px;">Tip : Press the key combination <span style="font-weight: bold;"><i class="fa-brands fa-windows"></i> + .</span> for more icons . For Mac OS, press <span style="font-weight: bold;">Command + Control + Space</span> .</p>
                                         </form>
                                         </div>
                                     </div>
@@ -124,6 +125,11 @@
             </div>
         </div>
         <div id="right" class="col-3 p-0"><DashboardRight></DashboardRight></div>
+        <div id="toTop" @click="scrollToTop" v-if="showButton">
+          <button >
+            <i class="fa-solid fa-chevron-up"></i>
+          </button>
+        </div>
     </div>
 </template>
 <script>
@@ -183,7 +189,8 @@ export default {
               id_article:null,
               content:''
             },
-            id_article_delete:null 
+            id_article_delete:null,
+            showButton: true
         }
     },
     // props: ['full_article'],
@@ -193,6 +200,7 @@ export default {
     created(){
     },
     mounted(){
+        window.addEventListener("scroll", this.handleScroll);
         // this.full_article = this.article; 
         // console.log(this.full_article);
         // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
@@ -229,8 +237,25 @@ export default {
         // this.count_cmt = this.full_article.comment.length;
         // console.log(this.count_cmt);
         // this.show_setting_cmt = new Array(this.count_cmt).fill(false);
+        var dashboard_user = document.getElementById("dashboard_user");
+        dashboard_user.removeEventListener("scroll", this.handleScroll);
     },
     methods:{
+      scrollToTop() {
+        var dashboard_user = document.getElementById("dashboard_user");
+        dashboard_user.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      },
+      handleScroll() {
+        var dashboard_user = document.getElementById("dashboard_user");
+        if (dashboard_user.pageYOffset > 10) {
+          this.showButton = true;
+        } else {
+          this.showButton = false;
+        }
+      },
       // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
       handleOutsideClick(event) {
           if (!event.target.closest('button.btn_setting_cmt')) {
@@ -367,6 +392,28 @@ export default {
 }
 </script>
 <style scoped>
+#toTop {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  background-color: rgb(144, 220, 255);
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 5px solid white;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+#toTop:hover {
+  border: 5px solid white;
+  border: 5px solid #0085FF;
+  background-color: white;
+}
 #modal_article {
     /* background-color: red; */
 }

@@ -8,6 +8,7 @@
         </div>
 
         <div style="margin-top: 30px;margin-bottom: 10px;color:gray;text-transform: uppercase;"><i class="fa-solid fa-file-pen"></i> Content</div>
+        <p style="font-size: 12px;padding-left: 6px;color: #515151;margin-top: 2px;">Tip : Press the key combination <span style="font-weight: bold;"><i class="fa-brands fa-windows"></i> + .</span> for more icons . For Mac OS, press <span style="font-weight: bold;">Command + Control + Space</span> .</p>
         <div id="content">
             <quill-editor
                 v-model:value="state.content"
