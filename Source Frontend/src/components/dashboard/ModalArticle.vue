@@ -9,7 +9,7 @@
                 <div class="infor_article">
                     <div class="infor_left">
                         <p class="infor_fullname" @click="goInforAccount(full_article.user.id)">{{ full_article.user.fullname }}</p>
-                        <p class="infor_created">{{ process_date(full_article.article.created_at) }}</p>
+                        <p class="infor_created" @click="goArticle(full_article.article.id)" >{{ process_date(full_article.article.created_at) }}</p>
                     </div>
                     <div class="infor_right" v-if="user">
                       <button class="btn_setting" @click="show_setting = !show_setting"><i class="fa-solid fa-ellipsis" ></i></button>
@@ -328,7 +328,10 @@ export default {
       },
       goInforAccount(id){
         this.$router.push({name:'InforAccount',params:{id:id}});
-      }
+      },
+      goArticle(id){
+        this.$router.push({name:'ArticleDetails',params:{id:id}});
+      },
 
     },
     watch:{

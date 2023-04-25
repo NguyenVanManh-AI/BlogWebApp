@@ -98,10 +98,9 @@ export default {
 
     },
     mounted(){
-
         this.user = JSON.parse(window.localStorage.getItem('user'));
         if(this.user != null && this.user.avatar != null) this.url_img = config.API_URL + this.user.avatar;
-
+        window.document.title=this.user.fullname + ' - Profile';
     },
     methods:{
         saveInfor:function(){

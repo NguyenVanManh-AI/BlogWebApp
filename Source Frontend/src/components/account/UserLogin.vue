@@ -50,7 +50,7 @@ export default {
       ParticleVue3,
     },
     setup() {
-      // document.title = "Meta Shop - Login";
+      document.title = "Login";
     },
     data(){
         return {
@@ -64,7 +64,6 @@ export default {
       }
     },
     mounted(){
-
       window.document.title='Login - Blog App';
       if(window.localStorage.getItem('user')){
           this.$router.push({name:"DashboardMain"});

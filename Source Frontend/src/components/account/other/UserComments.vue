@@ -30,7 +30,7 @@ export default {
   
     },
     mounted(){
-  
+        window.document.title='Comments - Blog App';
     },
     methods:{
         handleEnter(event) {

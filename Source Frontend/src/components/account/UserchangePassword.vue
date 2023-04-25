@@ -110,7 +110,7 @@
   
     },
     mounted(){
-  
+      window.document.title='Change Password';
     },
     methods:{
         showPw:function(){
