@@ -17,8 +17,9 @@ export default {
   name: 'App',
   components:{
     Notification,
-  }
-  // mounted() {
+  },
+  mounted() {
+    this.$router.push({name:"DashboardMain"});
   //   const shortcutIcon = document.querySelector('link[rel="shortcut icon"]');
   //   if (shortcutIcon) {
   //     shortcutIcon.href = '/logo.png';
@@ -29,7 +30,7 @@ export default {
   //     newShortcutIcon.href = '/logo.png';
   //     document.head.appendChild(newShortcutIcon);
   //   }
-  // },
+  },
 }
 </script>
 

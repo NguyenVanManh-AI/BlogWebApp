@@ -1,6 +1,6 @@
 <template>
     <div id="dashboard_right" class="pl-2 pt-2 pr-2">
-        <div class="row m-0 pt-1 pl-3 pr-3 pb-1 title-account" >
+        <div class="row m-0 pl-3 pr-3 title-account" >
             <div class="col-10 d-flex align-items-center justify-content-end" style="cursor: pointer;"  @click="openModal = !openModal"  v-if="user">
                 <h1 class="" style="font-size: 17px;font-weight: bold;">{{ user.fullname }}</h1>
             </div>
@@ -102,6 +102,10 @@ export default {
     /* border-bottom: 1px solid silver; */
     background-color: white;
     border: 1px solid silver;
+    height: 52px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
 }
 .title-account h1:hover {
     color: #0076e5;
@@ -143,10 +147,13 @@ export default {
     width: 100%;
     font-weight: bold;
     border: 1px solid silver;
-    margin: 5px 0px;
+    /* margin: 5px 0px; */
     border-radius: 10px;
-    padding: 6px 16px;
     cursor: pointer;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0px 16px;  
 }
 #login li:hover {
     background-color: rgb(234, 234, 234);
@@ -155,13 +162,13 @@ export default {
 #login li span {
     background-color: rgb(210, 210, 210);
     border-radius: 20px;
-    display: inline-block;
-    height: 30px;
-    width: 30px;
-    padding: 3px;
     text-align: center;
-    align-items: center;
     margin-right: 10px;
+    width: 30px;
+    text-align: center;
+    height: 30px;
+    display: list-item;
+    line-height: 30px;
 }
 
 

@@ -199,6 +199,9 @@
             :page-class="'page-item'">
         </paginate>
       </div>
+      <div id="toTop" @click="scrollToTop" v-if="showButton">
+        <i class="fa-solid fa-chevron-up"></i>
+      </div>
     </div>
   </div>
 
@@ -255,13 +258,14 @@ export default {
               avatar:null
             },
             logo: require('@/assets/logo.png'),
+            showButton: true,
         }
     },
     created(){
 
     },
     mounted(){
-
+        window.addEventListener("scroll", this.handleScroll);
         if (document.body.style.paddingLeft !== "0px") {
           document.body.style.paddingLeft = "0px";
         }
@@ -334,10 +338,30 @@ export default {
     beforeUnmount() {
       // click bất cứ thứ gì ngoài button show setting đều làm cho ẩn show setting đó 
       document.removeEventListener('click', this.handleOutsideClick);
+      var dashboard_user = document.getElementById("dashboard_user");
+      dashboard_user.removeEventListener("scroll", this.handleScroll);
     },
-
-
     methods:{
+      scrollToTop() {
+        var dashboard_user = document.getElementById("dashboard_user");
+        dashboard_user.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+        var big_infor = document.getElementById("big_infor");
+        big_infor.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      },
+      handleScroll() {
+        // var dashboard_user = document.getElementById("dashboard_user");
+        // if (dashboard_user.pageYOffset > 10) {
+        //   this.showButton = true;
+        // } else {
+        //   this.showButton = false;
+        // }
+      },
       process_url(path){
         return config.API_URL + path.slice(1);
       },
@@ -446,7 +470,31 @@ export default {
 }
 </script>
 <style scoped>
-
+#toTop {
+  position: fixed;
+  right: 60px;
+  bottom: 60px;
+  background-color: rgb(144, 220, 255);
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 5px solid white;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+#toTop:hover {
+  border: 5px solid white;
+  border: 5px solid #0085FF;
+  background-color: white;
+}
+#big_infor {
+  margin-bottom: 20px;
+}
 /* Post Article */
 #title_blog {
   font-size: 30px;
@@ -473,6 +521,7 @@ export default {
   overflow: hidden;
   overflow-y: scroll;
   height: 100vh;
+  padding-bottom: 0px;
   /* padding-left: 25px;
   padding-right: 25px; */
   /* margin: 0px 25px; */
