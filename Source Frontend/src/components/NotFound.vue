@@ -11,11 +11,14 @@
 <script>
 export default{
     name : 'NotFound',
-	methods:{
-		home:function(){
-            this.$router.push({name:'DashboardMain'});
-		}
-	}
+    setup() {
+      document.title = "Page Not Found";
+    },
+    methods:{
+      home:function(){
+        this.$router.push({name:'DashboardMain'});
+      }
+    }
 }
 
 </script>

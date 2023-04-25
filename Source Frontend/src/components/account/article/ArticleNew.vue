@@ -66,6 +66,7 @@ export default {
       };
     },
     mounted(){
+      window.document.title='New Articles - Blog App';
       this.article.id_user = JSON.parse(window.localStorage.getItem('user')).id;
     },
     methods:{

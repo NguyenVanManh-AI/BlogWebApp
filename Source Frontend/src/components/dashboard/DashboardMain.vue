@@ -27,6 +27,7 @@ export default {
 
     },
     mounted(){
+        window.document.title='Main - Blog App';
         if (document.body.style.paddingLeft !== "0px") {
             document.body.style.paddingLeft = "0px";
         }

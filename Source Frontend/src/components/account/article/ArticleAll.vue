@@ -87,6 +87,7 @@ export default {
 
   },
   mounted(){
+    window.document.title='All Articles - Blog App';
     this.id_user = JSON.parse(window.localStorage.getItem('user')).id;
 
     // BaseRequest.get('articles/?page=1&id_user='+this.id_user)

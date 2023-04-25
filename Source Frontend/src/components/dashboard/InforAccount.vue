@@ -293,6 +293,7 @@ export default {
         BaseRequest.get('users/'+this.id_user+'/')
         .then( data => {
             this.full_user = data;
+            window.document.title=this.full_user.fullname;
         })
         .catch( () => {
         })
@@ -332,7 +333,6 @@ export default {
                 }
             }
         })
-
     },
     
     beforeUnmount() {

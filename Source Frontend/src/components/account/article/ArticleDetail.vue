@@ -44,6 +44,7 @@ export default {
         BaseRequest.get('articles/'+this.id_article+'/')
         .then( data => {
         this.article = data ;
+          window.document.title=this.article.title;
             var content = window.document.getElementById('content_html');
             content.innerHTML = this.article.content; 
           const { emitEvent } = useEventBus();

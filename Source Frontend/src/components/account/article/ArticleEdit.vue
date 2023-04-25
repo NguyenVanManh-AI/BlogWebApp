@@ -69,6 +69,7 @@ export default {
         BaseRequest.get('articles/'+this.id_article+'/')
         .then( data => {
             this.article = data ;
+            window.document.title=this.article.title;
             this.state.content = this.article.content;
             const { emitEvent } = useEventBus();
             emitEvent('eventSuccess','View Article Success !');

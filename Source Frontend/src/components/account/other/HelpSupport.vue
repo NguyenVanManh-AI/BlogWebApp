@@ -62,7 +62,7 @@ export default {
   
     },
     mounted(){
-  
+        window.document.title='Help & Support';
     },
     methods:{
         
