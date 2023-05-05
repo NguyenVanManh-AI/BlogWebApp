@@ -542,10 +542,11 @@ div.show_setting li .setting_icon{
   /* border: 1px solid silver; */
   border-top: 1px solid rgb(219, 219, 219);
   margin-top: 10px;
-  max-height: 500px;
+
+  /* max-height: 500px;
   min-height: 180px;
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: scroll; */
 }
 
 
