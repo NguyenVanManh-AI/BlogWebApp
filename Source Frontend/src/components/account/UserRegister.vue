@@ -15,30 +15,30 @@
             <form  @submit.prevent="register()" class="p-3">
               <div class="col-6 mx-auto"><router-link :to="{ name: 'DashboardMain' }" style="text-decoration: none !important;"><h2 style="font-weight: bold;font-size: 20px;color: #0076e5;" class="text-center"><i class="fa-solid fa-seedling"></i> Blog App</h2></router-link></div>
               <br>
-              <div class="form-group row">
+              <div class="form-group row" style="margin-bottom: 10px;">
                 <label for="staticEmail" class="col-4 col-form-label"><i class="fa-solid fa-signature"></i> Full Name  </label> 
-                <input v-model="user.fullname" type="text" required class="form-control col-8" id="exampleInputPassword1" placeholder="Full Name">
+                <input style="padding-left: 10px;" v-model="user.fullname" type="text" required class="form-control col-8" id="exampleInputPassword1" placeholder="Full Name">
               </div>
-              <div class="form-group row">
+              <div class="form-group row" style="margin-bottom: 10px;">
                 <label for="staticEmail" class="col-4 col-form-label"><i class="fa-solid fa-envelope-circle-check"></i> Email </label> 
-                <input v-model="user.email" type="email" required class="form-control col-8" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+                <input style="padding-left: 10px;" v-model="user.email" type="email" required class="form-control col-8" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
               </div>
-              <div class="form-group row">
+              <div class="form-group row" style="margin-bottom: 10px;">
                 <label for="staticEmail" class="col-4 col-form-label"><i class="fa-solid fa-key"></i> Password  </label> 
-                <input v-model="user.password" minlength="6" type="password" required class="form-control col-8" id="exampleInputPassword1" placeholder="Password">
+                <input style="padding-left: 10px;" v-model="user.password" minlength="6" type="password" required class="form-control col-8" id="exampleInputPassword1" placeholder="Password">
               </div>
-              <div class="form-group row">
+              <div class="form-group row" style="margin-bottom: 10px;">
                 <label for="staticEmail" class="col-4 col-form-label"><i class="fa-solid fa-calendar-day"></i> Date of birth  </label> 
-                <input v-model="user.date_of_birth" required type="date" format="YYYY MM DD" class="form-control col-8" id="exampleInputPassword1" placeholder="Date of birth">
+                <input style="padding-left: 10px;" v-model="user.date_of_birth" required type="date" format="YYYY MM DD" class="form-control col-8" id="exampleInputPassword1" placeholder="Date of birth">
               </div>
-              <div class="form-group row">
+              <div class="form-group row" style="margin-bottom: 10px;">
                   <label class="col-4 col-form-label"><i class="fa-solid fa-venus-mars"></i> Gender</label>
                   <div class="col-8 d-flex justify-content-center" style="border:1px solid #ced4da;padding:4px;border-radius:0.25rem;height: 38px;background-color: rgba(255, 255, 255, 0.605);">
-                      <div class="form-check form-check-inline">
+                      <div class="form-check form-check-inline" >
                           <input v-model="user.gender" required class="form-check-input" type="radio" name="inlineRadioOptions" id="male" value="1">
                           <label style="color: #0085FF;" class="form-check-label" for="inlineRadio1">Men</label>
                       </div>
-                      <div class="form-check form-check-inline">
+                      <div class="form-check form-check-inline" style="margin-left: 10px;">
                           <input v-model="user.gender" required class="form-check-input" type="radio" name="inlineRadioOptions" id="female" value="0">
                           <label style="color: #0085FF;" class="form-check-label" for="inlineRadio2">Women</label>
                       </div>

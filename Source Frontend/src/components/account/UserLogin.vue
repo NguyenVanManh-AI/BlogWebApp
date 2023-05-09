@@ -15,13 +15,13 @@
             <form  @submit.prevent="login()" class="p-3">
               <div class="col-6 mx-auto"><router-link :to="{ name: 'DashboardMain' }" style="text-decoration: none !important;"><h2 style="font-weight: bold;font-size: 20px;color: #0076e5;" class="text-center"><i class="fa-solid fa-seedling"></i> Blog App</h2></router-link></div>
               <br>
-              <div class="form-group row">
+              <div class="form-group row" style="margin-bottom: 10px;">
                 <label for="staticEmail" class="col-3 col-form-label pl-0 pr-0"><i class="fa-solid fa-envelope-circle-check"></i> Email </label> 
-                <input required v-model="user.email" type="email" class="form-control col-9" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <input style="padding-left: 10px;" required v-model="user.email" type="email" class="form-control col-9" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
               </div>
-              <div class="form-group row">
+              <div class="form-group row" style="margin-bottom: 10px;">
                 <label for="staticEmail" class="col-3 col-form-label pl-0 pr-0"><i class="fa-solid fa-key"></i> Password  </label> 
-                <input required v-model="user.password" type="password" class="form-control col-9" id="exampleInputPassword1" placeholder="Password">
+                <input style="padding-left: 10px;" required v-model="user.password" type="password" class="form-control col-9" id="exampleInputPassword1" placeholder="Password">
               </div>
               <!-- <a class="under" style="text-decoration: none;color: #F84B2F;" href="#" data-toggle="modal" data-target="#exampleModalForgotPassword" >Forgot your password ? </a><br> -->
               <router-link :to="{ name: 'UserRegister' }"><a class="under float-right" style="text-decoration: none;color: #F84B2F;" href="#" data-toggle="modal" data-target="#exampleModalForgotPassword" ><i class="fa-solid fa-user-plus"></i> Register ? </a></router-link><br>
