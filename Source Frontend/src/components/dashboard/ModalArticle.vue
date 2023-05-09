@@ -327,7 +327,8 @@ export default {
         emitEvent('eventSuccess','Report Article Success!');
       },
       goInforAccount(id){
-        this.$router.push({name:'InforAccount',params:{id:id}});
+        // this.$router.push({name:'InforAccount',params:{id:id}});
+        window.location = window.location.origin + '/infor/' + id;
       },
       goArticle(id){
         this.$router.push({name:'ArticleDetails',params:{id:id}});
