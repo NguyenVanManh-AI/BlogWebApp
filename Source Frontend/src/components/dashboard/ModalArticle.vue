@@ -2,7 +2,7 @@
     <div id="modal_article" v-if="full_article">
         <div class="big_article">
             <div class="header_article">
-                <div class="avatar_article">
+                <div class="avatar_article" @click="goInforAccount(full_article.user.id)">
                     <img :src="process_url(full_article.user.avatar)" alt="Avatar" v-if="full_article.user.avatar != null" />
                     <img src='../../assets/avatar.png' alt="Avatar" v-if="full_article.user.avatar == null"> 
                 </div>
@@ -36,7 +36,7 @@
             </div>
             <div id="list_comment">
                 <div class="comment_article" v-for="(comment,index) in full_article.comment" :key="comment.di">
-                    <div class="avatar_comment">
+                    <div class="avatar_comment" @click="goInforAccount(comment.id_user)">
                         <img :src="process_url(comment.avatar)" alt="Avatar" v-if="comment.avatar != null" />
                         <img src='../../assets/avatar.png' alt="Avatar" v-if="comment.avatar == null"> 
                     </div>
