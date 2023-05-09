@@ -33,7 +33,7 @@
       <!-- Article -->
       <div v-for="(article,index) in articles" :key="index" class="big_article">
         <div class="header_article">
-          <div class="avatar_article">
+          <div class="avatar_article" @click="goInforAccount(article.user.id)">
             <img :src="process_url(article.user.avatar)" alt="Avatar" v-if="article.user.avatar != null" />
             <img src='../../assets/avatar.png' alt="Avatar" v-if="article.user.avatar == null"> 
           </div>
